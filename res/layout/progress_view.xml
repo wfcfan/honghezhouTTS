@@ -1,0 +1,27 @@
+<RelativeLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent">
+	<RelativeLayout
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_centerInParent="true"
+		android:background="@null"
+		android:paddingBottom="20dip"
+		android:paddingLeft="15dip"
+		android:paddingRight="15dip"
+		android:paddingTop="20dip">
+		<ImageView
+			android:id="@+id/progressView"
+			android:layout_width="30dip"
+			android:layout_height="30dip"
+			android:layout_centerHorizontal="true"
+			android:src="@drawable/loadding_03" />
+		<EditText
+			android:id="@+id/emptyEdit"
+			android:layout_width="0.1dp"
+			android:layout_height="0.1dp">
+			<requestFocus />
+		</EditText>
+	</RelativeLayout>
+</RelativeLayout>

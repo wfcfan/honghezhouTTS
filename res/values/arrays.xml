@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    
+    <string-array name="codeTypes">
+        <item>收取码</item>
+        <item>追溯码</item>
+    </string-array>
+    
+	<string-array name="unitList">
+	    <item>kg</item>
+	    <item>千克</item>
+	    <item>g</item>
+	    <item>克</item>
+	    <item>t</item>
+	    <item>吨</item>
+	    <item>斤</item>
+	    <item>公斤</item>
+	</string-array>
+	
+	<string-array name="repl_strs">
+	    <item>http://sy.17ghh.cn/</item>
+	</string-array>
+</resources>

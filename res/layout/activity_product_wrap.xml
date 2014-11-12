@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <include layout="@layout/com_header" />
+    
+    <Button
+            android:id="@+id/btnScan"
+            style="@style/btnStyle2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:text="@string/scan_tip" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/receive_no_tip" />
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+        <EditText
+	        android:id="@+id/edtRevNo"
+	        android:layout_width="0dp"
+	        android:layout_height="wrap_content"
+	        android:layout_weight="1"
+	        android:gravity="top"
+	        android:inputType="text" />
+        <TextView 
+            android:id="@+id/trackCount"
+            android:layout_width="30dp"
+            android:layout_height="wrap_content"
+            android:text="@string/tip_zero"/>
+	</LinearLayout>
+    
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/track_no_tip" />
+
+    <EditText
+        android:id="@+id/edtTrackNo"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="top"
+        android:enabled="false"
+        android:inputType="textMultiLine" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:gravity="center" >
+
+        <Button
+            android:id="@+id/btnNew"
+            style="@style/btnStyle"
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/btn_magin_lr20"
+            android:layout_weight="1"
+            android:text="@string/btn_ok_tip" />
+
+        <Button
+            android:id="@+id/btnBack"
+            style="@style/btnStyle"
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/btn_magin_lr20"
+            android:layout_marginRight="@dimen/btn_magin_lr20"
+            android:layout_weight="1"
+            android:text="@string/back_tip" />
+    </LinearLayout>
+
+</LinearLayout>
