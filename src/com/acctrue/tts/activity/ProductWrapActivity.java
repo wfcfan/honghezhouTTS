@@ -151,5 +151,6 @@ public class ProductWrapActivity extends Activity {
 			trackCount.setText("" + count);
 			trackEdit.setText(oldStr);
 		}
+		findViewById(R.id.btnNew).setFocusable(true);
 	}
 }
