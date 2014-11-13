@@ -5,10 +5,13 @@ import java.util.UUID;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -47,6 +50,7 @@ public class DirectOutStoreActivity extends Activity implements OnClickListener 
 	Spinner ctrlStores;
 	StoreDB db;
 	UserInfo u;//当前用户
+	View selListItem = null;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -80,6 +84,22 @@ public class DirectOutStoreActivity extends Activity implements OnClickListener 
 		StoreTypesAdapter adptData = new StoreTypesAdapter(this,storeTypeList);
 		ctrlStores.setAdapter(adptData);
 		ctrlStores.setSelection(1);//默认为销售出库
+		
+		lstCorp.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int pos,
+					long id) {
+				if(selListItem != null){
+					selListItem.setBackgroundColor(Color.TRANSPARENT);
+				}
+				selListItem = view;
+				selListItem.setBackgroundColor(Color.YELLOW);
+				
+				editQueryCorp.setText(adpt.getItem(pos));
+				
+			}
+		});
 	}
 	
 	String getSerialNumber() {
