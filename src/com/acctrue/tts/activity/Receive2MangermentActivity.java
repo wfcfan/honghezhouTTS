@@ -155,22 +155,26 @@ public class Receive2MangermentActivity extends Activity implements
 		List<Charges> dataList = null;
 		
 		CheckBox chkInStock = (CheckBox)findViewById(R.id.chkIn);
-		ChargesStatusEnum status = chkInStock.isChecked() ? ChargesStatusEnum.InStock : ChargesStatusEnum.Uploaded;
+		//ChargesStatusEnum status = chkInStock.isChecked() ? ChargesStatusEnum.InStock : ChargesStatusEnum.Uploaded;
+		
+		int isAutoStorage = chkInStock.isChecked() ? 1 : 0;
 
 		switch (view.getId()) {
 		case R.id.btnUpload:
 			dataList = adpt.getCheckedData();
-			if(status == ChargesStatusEnum.Uploaded)
-				uploadCharges(adpt, dataList);
-			else
-				showWarehouse(false, dataList, adpt);
+//			if(status == ChargesStatusEnum.Uploaded)
+//				uploadCharges(adpt, dataList,isAutoStorage);
+//			else
+//				showWarehouse(false, dataList, adpt);
+			uploadCharges(adpt, dataList,isAutoStorage);
 			break;
 		case R.id.btnUploadAll:
 			dataList = adpt.getAllDatas();
-			if(status == ChargesStatusEnum.Uploaded)
-				uploadCharges(adpt, dataList);
-			else
-				showWarehouse(false, dataList, adpt);
+//			if(status == ChargesStatusEnum.Uploaded)
+//				uploadCharges(adpt, dataList,isAutoStorage);
+//			else
+//				showWarehouse(false, dataList, adpt);
+			uploadCharges(adpt, dataList,isAutoStorage);
 			break;
 		case R.id.btnDel:
 			dataList = adpt.getCheckedData();
@@ -209,23 +213,68 @@ public class Receive2MangermentActivity extends Activity implements
 		}
 	}
 	
-	void uploadCharges(Receive2MangermentAdapter adapter,final List<Charges> chargesList){
+	void uploadCharges(Receive2MangermentAdapter adapter,final List<Charges> chargesList,int isAutoStorage){
 		if(chargesList.size() == 0){
 			Toaster.show("请先选择数据行!");
 			return;
 		}
 		
 		for(Charges charges : chargesList){
-		
-			upload(charges,adapter);//上传数据到服务器
+			upload(charges,adapter,isAutoStorage);//上传数据到服务器
 		}
 	}
 	
-	void upload(final Charges c,final Receive2MangermentAdapter adapter){
-		if(c.getState() == ChargesStatusEnum.Uploaded.getStateId()){
-			Toaster.show(String.format("单据:%s已经上传",c.getBatchno()));
-			return;
-		}
+	void showWeight(final Charges c,final Receive2MangermentAdapter adapter){
+		LayoutInflater layoutInflater = LayoutInflater.from(this);
+		//================选择计量单位布局
+		final View dialogView = layoutInflater.inflate(R.layout.dialog_weight, null);
+		
+		//==============计量单位控件
+		final Spinner sp1 = (Spinner)dialogView.findViewById(R.id.spinnerUnit);
+		final String[] mItems = this.getResources().getStringArray(R.array.unitList);
+		ArrayAdapter<String> unitsData = new ArrayAdapter<String>(
+				this, android.R.layout.simple_spinner_item,
+				mItems);
+		sp1.setAdapter(unitsData);//设置计量单位数据
+		
+		LinearLayout whLayout = (LinearLayout)dialogView.findViewById(R.id.layoutWh);
+		whLayout.setVisibility(View.GONE);
+		
+		Dialog detailDialog = new AlertDialog.Builder(this)
+		.setTitle(c.getBatchno() + "--入库称重")
+		.setView(dialogView)
+		.setPositiveButton(R.string.btn_ok_tip, new DialogInterface.OnClickListener() {
+
+			@Override
+			public void onClick(DialogInterface arg0, int arg1) {
+				EditText editWeight = (EditText)dialogView.findViewById(R.id.editWeight);
+				String strWeight = editWeight.getText().toString();
+				String strUnit = (String)sp1.getSelectedItem();
+				strWeight += strUnit;//完整重量
+
+				UserInfo user = AccountUtil.getCurrentUser().getUserInfo();
+				UploadChargeStoreInfo ucs = new UploadChargeStoreInfo();
+				ucs.setActor(user.getUserName());
+				ucs.setActorDate(DateUtil.parseDatetimeToJsonDate(c.getCreateDate()));
+				ucs.setChargeCodes(c.getCodes());
+				ucs.setCorpId(user.getCorpId());
+				
+				c.setWeight(strWeight);
+				ucs.setWeight(strWeight);
+				inStock(c, ucs, adapter);
+			}
+			
+		}).create();
+		
+		detailDialog.show();
+			
+	}
+	
+	void upload(final Charges c,final Receive2MangermentAdapter adapter,int isAutoStorage){
+//		if(c.getState() == ChargesStatusEnum.Uploaded.getStateId()){
+//			Toaster.show(String.format("单据:%s已经上传",c.getBatchno()));
+//			return;
+//		}
 		ChargeCodesDB db = new ChargeCodesDB(this);
 		List<ChargeCodes> ccList = db.getChargeCodes2(c.getId());//获取单据下的所有扫码
 		if(ccList.size() == 0){
@@ -236,7 +285,7 @@ public class Receive2MangermentActivity extends Activity implements
 		if(c.getIsPackCode() == CodeTypeEnum.TrackCode.getId()){
 			c.setState(2);//追溯码
 		}else{
-			c.setState(0);//收取码
+			c.setState(isAutoStorage);//收取码
 		}
 		
 		UploadChargeCodesRequest uc = new UploadChargeCodesRequest();
@@ -256,7 +305,11 @@ public class Receive2MangermentActivity extends Activity implements
 				}
 				
 				if(uccr != null){
-					if(uccr.isError()){
+					if(uccr.isError() && uccr.getMessage().startsWith("WEIGHT:")){
+						showWeight(c,adapter);
+						return;
+					}
+					else if(uccr.isError()){
 						Toaster.show(uccr.getMessage());
 						return;
 					}

@@ -48,7 +48,7 @@ public class FarmLandsDB {
 				"FarmLandName", "UserOwnerId","UserOwnerDisplayName" }, null, null, null, null, null);
 		while (c.moveToNext()) {
 			FarmLands f = new FarmLands();
-			f.setFarmLandCode(c.getString(c.getColumnIndex("FarmLandName")));
+			f.setFarmLandCode(c.getString(c.getColumnIndex("FarmLandCode")));
 			f.setFarmLandName(c.getString(c.getColumnIndex("FarmLandName")));
 			f.setUserOwnerId(c.getInt(c.getColumnIndex("UserOwnerId")));
 			f.setUserOwnerDisplayName(c.getString(c.getColumnIndex("UserOwnerDisplayName")));
