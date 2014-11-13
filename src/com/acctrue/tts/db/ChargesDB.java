@@ -57,7 +57,7 @@ public class ChargesDB {
 		List<Charges> list = new ArrayList<Charges>();
 		db = this._ctx.openOrCreateDatabase(Constants.DATABASE_NAME, Constants.DATABASE_CURRENT_VERSION, null);
 		Cursor c = db.query(TABLE_CHARGES, new String[] { "Id",
-				"batchno","ManNo","FarmlandNo","ProductId","CreateDate","Man","State","IsPackCode","Weight"}, null, null, null, null, null);
+				"batchno","ManNo","FarmlandNo","ProductId","CreateDate","Man","State","IsPackCode","Weight"}, null, null, null, null, "CreateDate desc");
 		while(c.moveToNext()){
 			Charges charges = new Charges();
 			charges.setId(c.getString(c.getColumnIndex("Id")));
