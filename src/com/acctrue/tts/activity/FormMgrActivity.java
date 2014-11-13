@@ -1,8 +1,6 @@
 package com.acctrue.tts.activity;
 
 import java.util.List;
-import java.util.UUID;
-
 import org.json.JSONObject;
 
 import android.app.Activity;
@@ -35,7 +33,6 @@ import com.acctrue.tts.rpc.OnCompleteListener;
 import com.acctrue.tts.rpc.RpcAsyncTask;
 import com.acctrue.tts.tasks.TaskUtils;
 import com.acctrue.tts.utils.AccountUtil;
-import com.acctrue.tts.utils.DateUtil;
 import com.acctrue.tts.utils.Toaster;
 import com.acctrue.tts.utils.ViewUtil;
 
