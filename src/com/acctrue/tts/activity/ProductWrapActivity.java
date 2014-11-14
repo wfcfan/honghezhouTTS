@@ -141,13 +141,15 @@ public class ProductWrapActivity extends Activity {
 		}else{
 			trackEdit.setEnabled(true);
 			String oldStr = trackEdit.getText().toString().trim();
+			int count = 0;
 			if(oldStr.length() == 0){
 				oldStr = scanno;
+				count = 1;
 			}else{
 				oldStr += "," + scanno;
-				
+				count = oldStr.split(",").length;
 			}
-			int count = Integer.parseInt(trackCount.getText().toString()) + 1;
+			
 			trackCount.setText("" + count);
 			trackEdit.setText(oldStr);
 		}

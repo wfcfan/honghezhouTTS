@@ -187,31 +187,6 @@ public class TrackNoMgntActivity extends Activity { //implements ModifyRelationC
 					});
 			TaskUtils.execute(task, "post","/rest/UploadRelation");
 		}
-
-		
-//		RestAsyncTask task = new RestAsyncTask(TrackNoMgntActivity.this,
-//				R.string.tip_title, R.string.tip_dataupload, R.string.tip_dataupload_failed, jsonDatas, 
-//				new OnCompleteListener() {
-//					
-//					@Override
-//					public void onComplete(String content) {
-//						try {
-//							boolean fail = true;
-//							if(content != null){
-//								JSONObject ret = new JSONObject(content);
-//								fail = ret.getBoolean("IsError");
-//							}
-//							if(content == null || fail){
-//								Toaster.show(getBaseContext().getResources().getString(R.string.tip_dataupload_failed));
-//							}else{
-//								deleteData();
-//							}
-//						} catch (JSONException e) {
-//							Toaster.show(e.getMessage());
-//						}					
-//					}
-//				});
-//		task.execute("post",Constants.URL_HOST + "/rest/UploadRelation");
 	}
 
 	private void deleteData() {
