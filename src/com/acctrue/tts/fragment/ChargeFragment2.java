@@ -47,7 +47,7 @@ public class ChargeFragment2 extends Fragment implements OnClickListener {
 		
 		codesData = new ArrayList<String>();
 		// -----------生成测试数据
-		//codesData.add(UUID.randomUUID().toString());
+		codesData.add(UUID.randomUUID().toString());
 
 		adapter = new CodesAdapter(mAct, codesData);
 		// 初始化下拉列表

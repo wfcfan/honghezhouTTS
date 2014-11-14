@@ -10,6 +10,7 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -224,7 +225,7 @@ public class Receive2MangermentActivity extends Activity implements
 		}
 	}
 	
-	void showWeight(final Charges c,final Receive2MangermentAdapter adapter){
+	void showWeight(final Charges c,final Receive2MangermentAdapter adapter,final int isAutoStorage){
 		LayoutInflater layoutInflater = LayoutInflater.from(this);
 		//================选择计量单位布局
 		final View dialogView = layoutInflater.inflate(R.layout.dialog_weight, null);
@@ -261,7 +262,10 @@ public class Receive2MangermentActivity extends Activity implements
 				
 				c.setWeight(strWeight);
 				ucs.setWeight(strWeight);
-				inStock(c, ucs, adapter);
+				if(isAutoStorage == 1)
+					upload(c,adapter,1);//自动入库，交叉调用函数
+				else
+					inStock(c, ucs, adapter);				
 			}
 			
 		}).create();
@@ -270,7 +274,7 @@ public class Receive2MangermentActivity extends Activity implements
 			
 	}
 	
-	void upload(final Charges c,final Receive2MangermentAdapter adapter,int isAutoStorage){
+	void upload(final Charges c,final Receive2MangermentAdapter adapter,final int isAutoStorage){
 //		if(c.getState() == ChargesStatusEnum.Uploaded.getStateId()){
 //			Toaster.show(String.format("单据:%s已经上传",c.getBatchno()));
 //			return;
@@ -281,7 +285,11 @@ public class Receive2MangermentActivity extends Activity implements
 			Toaster.show(String.format("单据：%s下没有扫码,无法进行上传!",c.getBatchno()));
 			return;
 		}
-		c.setWeight("0");//首次上传时重随便填写一个
+		
+		if(TextUtils.isEmpty(c.getWeight())){//首次上传时重随便填写一个
+			c.setWeight("0");
+		}
+		
 		if(c.getIsPackCode() == CodeTypeEnum.TrackCode.getId()){
 			c.setState(2);//追溯码
 		}else{
@@ -306,7 +314,7 @@ public class Receive2MangermentActivity extends Activity implements
 				
 				if(uccr != null){
 					if(uccr.isError() && uccr.getMessage().startsWith("WEIGHT:")){
-						showWeight(c,adapter);
+						showWeight(c,adapter,isAutoStorage);
 						return;
 					}
 					else if(uccr.isError()){
@@ -314,13 +322,15 @@ public class Receive2MangermentActivity extends Activity implements
 						return;
 					}
 					
-					if(c.getIsPackCode() == CodeTypeEnum.ChargesCode.getId()){
+					
+					if(isAutoStorage == 1){
+						chargesDB.deleteCharges(c.getId());//删除数据
+						adapter.RemoveItems(c);
+					}
+					else{
 						chargesDB.modifyChangeState(c.getId(), ChargesStatusEnum.Uploaded);//修改上传状态
 						c.setState(ChargesStatusEnum.Uploaded.getStateId());
 						adapter.updateItem(c);
-					}else{
-						chargesDB.deleteCharges(c.getId());//删除数据
-						adapter.RemoveItems(c);
 					}
 					Toaster.show("上传成功!");
 				}
