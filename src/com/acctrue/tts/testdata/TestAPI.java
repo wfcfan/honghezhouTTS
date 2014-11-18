@@ -11,6 +11,7 @@ import com.acctrue.tts.model.FarmLands;
 import com.acctrue.tts.model.Farmers;
 import com.acctrue.tts.model.OrderInfo;
 import com.acctrue.tts.model.Product;
+import com.acctrue.tts.model.StoreCode;
 import com.acctrue.tts.model.Warehouse;
 import com.acctrue.tts.utils.AccountUtil;
 import com.acctrue.tts.utils.DateUtil;
@@ -127,6 +128,19 @@ public final class TestAPI {
 		list.add(o2);
 		
 		return list;
+	}
+	
+	static public StoreCode getStoreCode(String storeId,String cid){
+		StoreCode sc = new StoreCode();
+		sc.setStoreId(cid);
+		sc.setId(UUID.randomUUID().toString());
+		sc.setCreateTime(DateUtil.getDatetime());
+		sc.setCodeId(cid);
+		return sc;
+	}
+	
+	static public StoreCode getStoreCode(String storeId){
+		return getStoreCode(storeId,UUID.randomUUID().toString());
 	}
 
 }

@@ -231,6 +231,8 @@ public class StoreDB {
 		while (c.moveToNext()) {
 			Store s = new Store(c);
 			s.setItem(this.getStoreItems(s.getStoreId(), db));
+			s.setCodes(this.getStoreCodes(s.getStoreId(), StoreCode.DELETE_FALSE));
+			s.setRemoveCodes(this.getStoreCodes(s.getStoreId(), StoreCode.DELETE_TRUE));
 			list.add(s);
 		}
 		c.close();

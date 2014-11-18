@@ -218,6 +218,12 @@ public class Receive2MangermentActivity extends Activity implements
 	}
 
 	@Override
+	protected void onRestart() {
+		super.onRestart();
+		this.init();
+	}
+
+	@Override
 	public void onCreateContextMenu(ContextMenu menu, View v,
 			ContextMenuInfo menuInfo) {
 		menu.setHeaderTitle("请选择操作");

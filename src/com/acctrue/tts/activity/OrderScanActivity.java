@@ -39,6 +39,7 @@ import com.acctrue.tts.model.StoreItem;
 import com.acctrue.tts.rpc.OnCompleteListener;
 import com.acctrue.tts.rpc.RpcAsyncTask;
 import com.acctrue.tts.tasks.TaskUtils;
+import com.acctrue.tts.testdata.TestAPI;
 import com.acctrue.tts.utils.AccountUtil;
 import com.acctrue.tts.utils.DateUtil;
 import com.acctrue.tts.utils.Toaster;
@@ -128,6 +129,9 @@ public class OrderScanActivity extends FragmentActivity implements OnClickListen
 		
 		//初始化码列表
 		List<StoreCode> codeList = db.getStoreCodes(storeId, StoreCode.DELETE_FALSE);
+		//codeList.add(TestAPI.getStoreCode(storeId));
+		//codeList.add(TestAPI.getStoreCode(storeId));
+		
 		adptCode = new StockCodeListAdapter(this,codeList);
 		ListView packList = (ListView)findViewById(R.id.orderList);
 		packList.setAdapter(adptCode);
