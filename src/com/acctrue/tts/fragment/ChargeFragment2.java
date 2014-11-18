@@ -2,12 +2,12 @@ package com.acctrue.tts.fragment;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -19,6 +19,7 @@ import com.acctrue.tts.Constants;
 import com.acctrue.tts.R;
 import com.acctrue.tts.activity.CaptureActivity;
 import com.acctrue.tts.adapter.CodesAdapter;
+import com.acctrue.tts.db.ChargeCodesDB;
 import com.acctrue.tts.utils.Toaster;
 
 public class ChargeFragment2 extends Fragment implements OnClickListener {
@@ -44,14 +45,24 @@ public class ChargeFragment2 extends Fragment implements OnClickListener {
 			Bundle savedInstanceState) {
 		root = inflater.inflate(R.layout.charge_fragment2, container, true);
 
+		Intent intent = this.getActivity().getIntent();
+		final String chargesId = intent.getStringExtra("chargesId");
+		if(!TextUtils.isEmpty(chargesId)){
+			ChargeCodesDB ccDb = new ChargeCodesDB(this.getActivity());
+			codesData =  ccDb.getChargeCodes2String(chargesId);
+		}else{
+			codesData = new ArrayList<String>();
+		}
 		
-		codesData = new ArrayList<String>();
 		// -----------生成测试数据
-		codesData.add(UUID.randomUUID().toString());
+		//codesData.add(UUID.randomUUID().toString());
+		//codesData.add(UUID.randomUUID().toString());
+		//codesData.add(UUID.randomUUID().toString());
 
 		adapter = new CodesAdapter(mAct, codesData);
 		// 初始化下拉列表
 		noList = (ListView) root.findViewById(R.id.lstCode);
+		noList.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
 		noList.setAdapter(adapter);
 
 		Button btndelCode = (Button) root.findViewById(R.id.btndelCode);
@@ -67,23 +78,15 @@ public class ChargeFragment2 extends Fragment implements OnClickListener {
 	public void onClick(View view) {
 		switch (view.getId()) {
 		case R.id.btndelCode:
-			listItemID.clear();
-			for (int i = 0; i < adapter.mChecked.size(); i++) {
-				if (adapter.mChecked.get(i)) {
-					listItemID.add(i);
-				}
-			}
-			if (listItemID.size() == 0) {
+			
+			List<String> checkList = adapter.getCheckedData();
+			adapter = (CodesAdapter)noList.getAdapter();
+			if(checkList.size() == 0){
 				Toaster.show("没有选定任何记录!");
-			} else {
-
-				for (int i = 0; i < listItemID.size(); i++) {
-					// sb.append("ItemID=" + adapter.getItem(i) + " . ");
-					codesData.remove(i);
-				}
-				adapter.notifyDataSetChanged();// 刷新数据列表
-				Toaster.show("删除成功!");
+				return;
 			}
+			adapter.RemoveItems(checkList);
+			Toaster.show("删除成功!");
 			break;
 		case R.id.btnSmq:
 			Intent intent = new Intent();
@@ -114,13 +117,14 @@ public class ChargeFragment2 extends Fragment implements OnClickListener {
 			// ccDb.addChargeCode(cc);
 			// Toaster.show("OK");
 			
-			if(codesData.contains(scanResult)){
+			adapter = (CodesAdapter)noList.getAdapter();
+			if(adapter.getAllData().contains(scanResult)){
 				Toaster.show("该码已存在!");
 				return;
 			}
 			
-			codesData.add(scanResult);
-			adapter.notifyDataSetChanged();// 刷新数据列表
+			adapter.addData(scanResult);
+			Toaster.show("添加成功!");
 
 		} catch (Exception e) {
 			e.printStackTrace();

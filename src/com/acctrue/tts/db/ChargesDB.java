@@ -53,6 +53,29 @@ public class ChargesDB {
 		db.close();
 	}
 	
+	public Charges getCharge(String id){
+		db = this._ctx.openOrCreateDatabase(Constants.DATABASE_NAME, Constants.DATABASE_CURRENT_VERSION, null);
+		Cursor c = db.query(TABLE_CHARGES, new String[] { "Id",
+				"batchno","ManNo","FarmlandNo","ProductId","CreateDate","Man","State","IsPackCode","Weight"}, String.format("Id='%s'", id), null, null, null, null);
+		Charges charges = null;
+		while(c.moveToNext()){
+			charges = new Charges();
+			charges.setId(c.getString(c.getColumnIndex("Id")));
+			charges.setBatchno(c.getString(c.getColumnIndex("batchno")));
+			charges.setManNo(c.getString(c.getColumnIndex("ManNo")));
+			charges.setFarmlandNo(c.getString(c.getColumnIndex("FarmlandNo")));
+			charges.setProductId(c.getString(c.getColumnIndex("ProductId")));
+			charges.setCreateDate(c.getString(c.getColumnIndex("CreateDate")));
+			charges.setMan(c.getString(c.getColumnIndex("Man")));
+			charges.setState(c.getInt(c.getColumnIndex("State")));
+			charges.setIsPackCode(c.getInt(c.getColumnIndex("IsPackCode")));
+			charges.setWeight(c.getString(c.getColumnIndex("Weight")));
+		}
+		c.close();
+		db.close();
+		return charges;
+	}
+	
 	public List<Charges> getCharges(){
 		List<Charges> list = new ArrayList<Charges>();
 		db = this._ctx.openOrCreateDatabase(Constants.DATABASE_NAME, Constants.DATABASE_CURRENT_VERSION, null);

@@ -109,7 +109,15 @@ public class ChargeCodesDB {
 		db.close();
 		return list;
 	}
-
+	
+	public List<String> getChargeCodes2String(String chargeId){
+		List<String> ccList = new ArrayList<String>();
+		for(ChargeCodes c : getChargeCodes2(chargeId)){
+			ccList.add(c.getCode());
+		}
+		return ccList;
+	}
+	
 	public List<ChargeCodes> getChargeCodes2(String chargeId) {
 		List<ChargeCodes> list = new ArrayList<ChargeCodes>();
 		db = this._ctx.openOrCreateDatabase(Constants.DATABASE_NAME,

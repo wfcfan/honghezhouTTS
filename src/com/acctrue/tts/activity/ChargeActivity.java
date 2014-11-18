@@ -1,5 +1,6 @@
 package com.acctrue.tts.activity;
 
+import java.util.List;
 import java.util.UUID;
 
 import android.os.Bundle;
@@ -94,7 +95,7 @@ public class ChargeActivity extends FragmentActivity implements
 
 		ViewUtil.initHeader(this, "农产品收取");
 	}
-	
+
 	@Override
 	public void onClick(View view) {
 		switch (view.getId()) {
@@ -142,9 +143,6 @@ public class ChargeActivity extends FragmentActivity implements
 		charges.setCreateDate(DateUtil.getDatetime());
 		charges.setState(ChargesStatusEnum.Init.getStateId());
 
-		ChargesDB cdb = new ChargesDB(this);
-		cdb.addCharges(charges);
-		
 		//=====================================收取码列表
 		ChargeFragment2 cf2 = (ChargeFragment2) getFragmentManager()
 				.findFragmentById(R.id.tab2);
@@ -155,10 +153,19 @@ public class ChargeActivity extends FragmentActivity implements
 		Log.d(TAG, String.valueOf(adapter.getCount()));
 		
 		ChargeCodesDB ccDb = new ChargeCodesDB(this);
-		for (int i = 0; i < adapter.getCount(); i++) {
+		List<String> codeList = adapter.getAllData();
+		if(codeList.size() == 0){
+			Toaster.show("扫码数据为空,无法提交!");
+			return;
+		}
+		
+		ChargesDB cdb = new ChargesDB(this);
+		cdb.addCharges(charges);//保存单据
+		
+		for(String s : codeList){
 			ChargeCodes cc = new ChargeCodes();
 			cc.setChargeId(newId);
-			cc.setCode(adapter.getItem(i).toString());
+			cc.setCode(s);
 			cc.setState(0);
 			ccDb.addChargeCode(cc);
 		}

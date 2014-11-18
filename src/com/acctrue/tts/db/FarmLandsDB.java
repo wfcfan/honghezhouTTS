@@ -39,13 +39,36 @@ public class FarmLandsDB {
 		db.delete(TABLE_FARMLANDS, String.format("FarmLandCode='%s'",code), null);
 		db.close();
 	}
-	
+
 	public List<FarmLands> getFarmLandsList(){
 		List<FarmLands> list = new ArrayList<FarmLands>();
 		db = this._ctx.openOrCreateDatabase(Constants.DATABASE_NAME,
 				Constants.DATABASE_CURRENT_VERSION, null);
 		Cursor c = db.query(TABLE_FARMLANDS, new String[] { "FarmLandCode",
 				"FarmLandName", "UserOwnerId","UserOwnerDisplayName" }, null, null, null, null, null);
+		while (c.moveToNext()) {
+			FarmLands f = new FarmLands();
+			f.setFarmLandCode(c.getString(c.getColumnIndex("FarmLandCode")));
+			f.setFarmLandName(c.getString(c.getColumnIndex("FarmLandName")));
+			f.setUserOwnerId(c.getInt(c.getColumnIndex("UserOwnerId")));
+			f.setUserOwnerDisplayName(c.getString(c.getColumnIndex("UserOwnerDisplayName")));
+			list.add(f);
+		}
+		c.close();
+		db.close();
+		return list;
+	}
+	
+	public List<FarmLands> getFarmLandsList(String userWnerId){
+		return getFarmLandsList(Integer.valueOf(userWnerId));
+	}
+	
+	public List<FarmLands> getFarmLandsList(int userWnerId){
+		List<FarmLands> list = new ArrayList<FarmLands>();
+		db = this._ctx.openOrCreateDatabase(Constants.DATABASE_NAME,
+				Constants.DATABASE_CURRENT_VERSION, null);
+		Cursor c = db.query(TABLE_FARMLANDS, new String[] { "FarmLandCode",
+				"FarmLandName", "UserOwnerId","UserOwnerDisplayName" }, String.format("UserOwnerId=%d", userWnerId), null, null, null, null);
 		while (c.moveToNext()) {
 			FarmLands f = new FarmLands();
 			f.setFarmLandCode(c.getString(c.getColumnIndex("FarmLandCode")));

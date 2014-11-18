@@ -7,6 +7,7 @@ import android.content.Context;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -51,6 +52,19 @@ public class ViewUtil {
 		spinner.setAdapter(adapter);
 	}
 	
+	@SuppressWarnings("unchecked")
+	static public void setSpinnerItemSelectedById(Spinner spinner, String id) {
+		ArrayAdapter<String> adapter = (ArrayAdapter<String>) spinner
+				.getAdapter();
+		for (int i = 0; i < adapter.getCount(); i++) {
+			if (adapter.getItem(i).toString().equals(id)) {
+				spinner.setSelection(i, true);
+				break;
+			}
+		}
+	}
+	
+	
 	public static void initHeader(final Activity activity,String title){
 		final OnClickListener backAct = new OnClickListener(){
 			@Override
@@ -64,7 +78,7 @@ public class ViewUtil {
 		
 		TextView lblUser = (TextView) activity.findViewById(R.id.lblUser);
 		UserInfo u = AccountUtil.getCurrentUser().getUserInfo();
-		lblUser.setText(u.getUserName());
+		lblUser.setText(u.getUserDisplayName());
 		lblUser.setOnClickListener(backAct);
 
 		TextView lblTitle = (TextView) activity.findViewById(R.id.lblTitle);

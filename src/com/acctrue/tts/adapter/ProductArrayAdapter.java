@@ -7,12 +7,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.acctrue.tts.R;
 import com.acctrue.tts.model.Product;
 
-public class ProductArrayAdapter extends BaseAdapter{
+public class ProductArrayAdapter extends BaseAdapter {
 	private List<Product> mList;
 	private Context mContext;
 
@@ -21,18 +22,34 @@ public class ProductArrayAdapter extends BaseAdapter{
 		this.mList = objects;
 	}
 
+	static public void setSpinnerItemSelectedById(Spinner spinner, int id) {
+		ProductArrayAdapter adapter = (ProductArrayAdapter) spinner
+				.getAdapter();
+		for (int i = 0; i < adapter.getCount(); i++) {
+			Product p = (Product) adapter.getItem(i);
+			if (p.getProductId() == id) {
+				spinner.setSelection(i, true);
+				break;
+			}
+		}
+	}
+
+	static public void setSpinnerItemSelectedById(Spinner spinner, String id) {
+		setSpinnerItemSelectedById(spinner, Integer.valueOf(id));
+	}
+
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		final Product prod = (Product) this.getItem(position);
 		LayoutInflater _LayoutInflater = LayoutInflater.from(mContext);
 		convertView = _LayoutInflater.inflate(R.layout.item, null);
 		if (convertView != null) {
-			TextView t1 = (TextView) convertView.findViewById(R.id.textView1);						
+			TextView t1 = (TextView) convertView.findViewById(R.id.textView1);
 			t1.setText(prod.getProductName());
 
 			TextView t2 = (TextView) convertView.findViewById(R.id.textView2);
 			t2.setVisibility(View.GONE);
-//			t2.setText("(" + prod.getProductId() + ")");
+			// t2.setText("(" + prod.getProductId() + ")");
 		}
 		return convertView;
 	}

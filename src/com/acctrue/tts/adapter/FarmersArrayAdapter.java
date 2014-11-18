@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.acctrue.tts.R;
@@ -20,6 +21,19 @@ public class FarmersArrayAdapter extends BaseAdapter{
 		this.mContext = context;
 		this.mList = objects;
 	}
+	
+	static public void setSpinnerItemSelectedById(Spinner spinner, String id) {
+		FarmersArrayAdapter adapter = (FarmersArrayAdapter) spinner
+				.getAdapter();
+		for (int i = 0; i < adapter.getCount(); i++) {
+			Farmers p = (Farmers) adapter.getItem(i);
+			if (p.getFarmerId().equals(id)) {
+				spinner.setSelection(i, true);
+				break;
+			}
+		}
+	}
+
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {

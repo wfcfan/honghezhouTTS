@@ -11,7 +11,7 @@ public class HongHeZhouDB {
 	private final String TAG =  HongHeZhouDB.class.getSimpleName();
 	private SQLiteDatabase db;
 	
-	private static final String CREATE_TABLE_CHARGECODES = "create table if not exists ChargeCodes(ChargeId char(36) primary key,Code text,IsStoreIn integer,createTime text)";
+	private static final String CREATE_TABLE_CHARGECODES = "create table if not exists ChargeCodes(ChargeId char(36),Code text,IsStoreIn integer,createTime text)";
 	private static final String CREATE_TABLE_CHARGES = "create table if not exists Charges(Id char(36) primary key,batchno text,ManNo text,FarmlandNo text,ProductId text, CreateDate text,Man text,State INTEGER,IsPackCode INTEGER,Weight text)";
 	private static final String CREATE_TABLE_CHARGESTOREIN = "create table if not exists ChargeStoreIn(Id text primary key,WarehouseId INTEGER,warehouseName text,Actor text,ActDate text)";
 	private static final String CREATE_TABLE_CHARGESTOREINCODE = "create table if not exists ChargeStoreInCode(StoreInId text primary key,Code text,IsStoreIn integer)";

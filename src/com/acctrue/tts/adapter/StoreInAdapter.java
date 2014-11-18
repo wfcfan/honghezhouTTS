@@ -1,6 +1,7 @@
 package com.acctrue.tts.adapter;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import android.content.Context;
@@ -13,24 +14,37 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 
 import com.acctrue.tts.R;
-import com.acctrue.tts.model.StoreCode;
+import com.acctrue.tts.model.ChargeStoreIn;
 
-public class CodesAdapter extends BaseAdapter {
+public class StoreInAdapter extends BaseAdapter{
 	private Context ctx;
 	private List<Boolean> mChecked;
-	private List<String> datas = new ArrayList<String>();
+	private CheckBox chkAll;
+	private List<ChargeStoreIn> datas = new ArrayList<ChargeStoreIn>();
 	
 	
-	public CodesAdapter(Context ctx, List<String> lst){
+	public StoreInAdapter(Context ctx, List<ChargeStoreIn> lst, CheckBox chkAll){
 		this.ctx = ctx;
 		if(lst != null) datas = lst;
 		mChecked = new ArrayList<Boolean>();
 		for(int i=0;i<datas.size();i++)
 			mChecked.add(false);
+		this.chkAll = chkAll;
+		this.chkAll.setChecked(false);
+		this.chkAll.setOnClickListener(new OnClickListener(){
+
+			@Override
+			public void onClick(View v) {
+				for(int i=0;i<mChecked.size();i++)
+					mChecked.set(i,StoreInAdapter.this.chkAll.isChecked());
+				notifyDataSetChanged();
+			}
+			
+		});
 	}
 	
-	public List<String> getCheckedData(){
-		List<String> lst = new ArrayList<String>();
+	public List<ChargeStoreIn> getCheckedData(){
+		List<ChargeStoreIn> lst = new ArrayList<ChargeStoreIn>();
 		for(int i=0;i<mChecked.size();i++){
 			if(mChecked.get(i))
 				lst.add(datas.get(i));
@@ -39,7 +53,7 @@ public class CodesAdapter extends BaseAdapter {
 		return lst;
 	}
 	
-	public void RemoveItems(List<String> dataList){
+	public void RemoveItems(List<ChargeStoreIn> dataList){
 		//删除datas对应的数据,
 		for(int i=0;i<dataList.size();i++){
 			datas.remove(dataList.get(i));
@@ -50,18 +64,15 @@ public class CodesAdapter extends BaseAdapter {
 		for(int i=0;i<datas.size();i++){
 			mChecked.add(false);
 		}
+		
+		chkAll.setChecked(false);
 		notifyDataSetChanged();
 	}
-	
-	public void RemoveItems(StoreCode... codes) {
-		for (StoreCode sc : codes)
-			datas.remove(sc);
-		// 重建 mChecked
-		mChecked = new ArrayList<Boolean>();
-		for (int i = 0; i < datas.size(); i++) {
-			mChecked.add(false);
+
+	public void RemoveItems(ChargeStoreIn ...csArr){
+		if(csArr != null){
+			RemoveItems(Arrays.asList(csArr));
 		}
-		notifyDataSetChanged();
 	}
 
 	@Override
@@ -80,47 +91,40 @@ public class CodesAdapter extends BaseAdapter {
 
 		return position;
 	}
-	
-	public void addData(String data){
-		datas.add(data);
-		mChecked.add(false);
-		notifyDataSetChanged();
-	}
-	
-	public void addAllData(List<String> dataList){
-		datas.addAll(dataList);
-		for(int i=0;i<dataList.size();i++){
-			mChecked.add(false);
-		}
-		notifyDataSetChanged();
-	}
-	
-	public List<String> getAllData(){
-		return datas;
-	}
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		if(convertView == null){
-			convertView = LayoutInflater.from(ctx).inflate(R.layout.code_item, null);
+			convertView = LayoutInflater.from(ctx).inflate(R.layout.storein_list_item, null);
 			ItemViewCache item = new ItemViewCache();
 			final int p = position;
-			item.checkBox = (CheckBox)convertView.findViewById(R.id.selecter);
+			item.checkBox = (CheckBox)convertView.findViewById(R.id.chk);
 			item.checkBox.setOnClickListener(new OnClickListener() {
 				
 				@Override
 				public void onClick(View v) {
 					CheckBox cb = (CheckBox) v;
 					mChecked.set(p, cb.isChecked());
+					if(chkAll.isChecked()){
+						chkAll.setChecked(cb.isChecked());
+					}else{
+						for(int i=0;i<mChecked.size();i++){
+							if(!mChecked.get(i))
+								return;
+						}
+						chkAll.setChecked(true);
+					}
 				}
 			});
-			item.desc = (TextView)convertView.findViewById(R.id.name);
+			item.desc = (TextView)convertView.findViewById(R.id.desc);
+			item.time = (TextView)convertView.findViewById(R.id.time);
 			convertView.setTag(item);
 		}
 		ItemViewCache cache = (ItemViewCache)convertView.getTag();
 		
 		cache.checkBox.setChecked(mChecked.get(position));
-		cache.desc.setText(datas.get(position).toString());
+		cache.desc.setText(datas.get(position).getWarehouseName());
+		cache.time.setText(datas.get(position).getActDate());
 		
 		return convertView;
 	}
@@ -128,6 +132,7 @@ public class CodesAdapter extends BaseAdapter {
 	private static class ItemViewCache{
 		public CheckBox checkBox;
 		public TextView desc;
+		public TextView time;
 	}
-
+	
 }
