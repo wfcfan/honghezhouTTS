@@ -14,14 +14,12 @@ import android.widget.TextView;
 import com.acctrue.tts.Constants;
 import com.acctrue.tts.GlobalApplication;
 import com.acctrue.tts.R;
-import com.acctrue.tts.dto.LoginResponse;
 import com.acctrue.tts.dto.VersionInfoRequest;
 import com.acctrue.tts.dto.VersionInfoResponse;
 import com.acctrue.tts.rpc.OnCompleteListener;
 import com.acctrue.tts.rpc.RpcAsyncTask;
 import com.acctrue.tts.tasks.TaskUtils;
 import com.acctrue.tts.tasks.UpdateManager;
-import com.acctrue.tts.utils.AccountUtil;
 import com.acctrue.tts.utils.SharedPreferencesUtils;
 import com.acctrue.tts.utils.Toaster;
 
@@ -44,6 +42,8 @@ public class SplashActivity extends ActivityGroup {
 		}
 		
 		Constants.URL_HOST = SharedPreferencesUtils.getServerAddress(true);
+		
+		
 
 		new Handler().postDelayed(new Runnable() {
 
@@ -57,7 +57,8 @@ public class SplashActivity extends ActivityGroup {
 				// }
 				VersionInfoRequest version = new VersionInfoRequest(
 													GlobalApplication.deviceId,
-													GlobalApplication.currentVersion);
+													GlobalApplication.currentVersionId);
+				
 				RpcAsyncTask task = new RpcAsyncTask(SplashActivity.this,version,new OnCompleteListener() {
 					@Override
 					public void onComplete(String content) {

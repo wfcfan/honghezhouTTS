@@ -4,6 +4,7 @@ import java.io.File;
 
 import android.app.Application;
 import android.content.Context;
+import android.content.pm.PackageInfo;
 import android.telephony.TelephonyManager;
 
 import com.acctrue.tts.db.HongHeZhouDB;
@@ -16,6 +17,7 @@ public class GlobalApplication extends Application {
 	public static GlobalApplication mApp;
 	public static String deviceId;
 	public static String currentVersion;
+	public static int currentVersionId;
 	
 	@Override
 	public void onCreate() {
@@ -37,8 +39,10 @@ public class GlobalApplication extends Application {
 			new HongHeZhouDB(this);// 数据库初始化
 			TelephonyManager tm = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
 			deviceId = tm.getDeviceId();
-			currentVersion = getPackageManager().getPackageInfo(
-					getPackageName(), 0).versionName;
+			
+			PackageInfo pi  =getPackageManager().getPackageInfo(getPackageName(), 0);
+			currentVersion = pi.versionName;
+			currentVersionId = pi.versionCode;
 
 			try {
 				// 这个的作用就是将 AsyncTask初始化到主线程
