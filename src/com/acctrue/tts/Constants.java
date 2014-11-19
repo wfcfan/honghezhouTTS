@@ -60,6 +60,7 @@ public final class Constants {
 	public static final int DATA_DOWNLOAD = 9;
 	
 	public static final String URL_USER_LOGIN = "/rest/Login";
+	public static final String URL_UPDATE_VERSION = "/rest/GetAutoUpdateVersion";
 	public static final String URL_GETFARMLANDS = "/rest/GetFarmLands";
 	public static final String URL_TIME = "/rest/GetSystemTime";
 	public static final String URL_GETPRODUCTBYPAGE = "/rest/GetProductByPage";

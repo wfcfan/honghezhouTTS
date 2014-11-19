@@ -64,6 +64,10 @@ public class UpdateManager {
 		if(apkUrl != null)
 			this.apkUrl = apkUrl;
 	}
+	
+	public void setUpdateMsg(String msg){
+		updateMsg = msg;
+	}
 	private String getApkPath(){
 		//return "/data/data/" + ctx.getPackageName() + "/apktemp/";
 		return Environment.getExternalStorageDirectory() + "/download/";

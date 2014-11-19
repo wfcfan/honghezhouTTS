@@ -1,5 +1,8 @@
 package com.acctrue.tts.activity;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.app.ActivityGroup;
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,6 +14,14 @@ import android.widget.TextView;
 import com.acctrue.tts.Constants;
 import com.acctrue.tts.GlobalApplication;
 import com.acctrue.tts.R;
+import com.acctrue.tts.dto.LoginResponse;
+import com.acctrue.tts.dto.VersionInfoRequest;
+import com.acctrue.tts.dto.VersionInfoResponse;
+import com.acctrue.tts.rpc.OnCompleteListener;
+import com.acctrue.tts.rpc.RpcAsyncTask;
+import com.acctrue.tts.tasks.TaskUtils;
+import com.acctrue.tts.tasks.UpdateManager;
+import com.acctrue.tts.utils.AccountUtil;
 import com.acctrue.tts.utils.SharedPreferencesUtils;
 import com.acctrue.tts.utils.Toaster;
 
@@ -44,7 +55,29 @@ public class SplashActivity extends ActivityGroup {
 				// finish();
 				// return;
 				// }
-				initLoginViews();
+				VersionInfoRequest version = new VersionInfoRequest(
+													GlobalApplication.deviceId,
+													GlobalApplication.currentVersion);
+				RpcAsyncTask task = new RpcAsyncTask(SplashActivity.this,version,new OnCompleteListener() {
+					@Override
+					public void onComplete(String content) {
+						VersionInfoResponse req;
+						try {
+							req = VersionInfoResponse.fromJson(new JSONObject(content));
+						} catch (JSONException e) {
+							req = null;
+						}
+						
+						if(req != null && !req.isError() && req.isUpdate()){
+							updateVersion(req.getUrl(),req.getUpdateContent());
+						}
+						
+						initLoginViews();
+					}
+				});
+				
+				TaskUtils.execute(task, TaskUtils.POST,Constants.URL_UPDATE_VERSION);
+				
 			}
 
 		}, 2000);
@@ -83,5 +116,11 @@ public class SplashActivity extends ActivityGroup {
 			return true;
 		}
 		return super.onKeyDown(keyCode, event);
+	}
+	
+	private void updateVersion(String url,String msg){
+		UpdateManager upManager = new UpdateManager(this,url);
+		upManager.setUpdateMsg(msg);
+		upManager.checkUpdateInfo();
 	}
 }
