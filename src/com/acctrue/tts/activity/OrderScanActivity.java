@@ -138,7 +138,7 @@ public class OrderScanActivity extends FragmentActivity implements OnClickListen
 		
 		//初始化删除码列表
 		codeList =  db.getStoreCodes(storeId, StoreCode.DELETE_TRUE);
-		adptDelCode = new StockCodeListAdapter(this,codeList);
+		adptDelCode = new StockCodeListAdapter(this,codeList,true);
 		ListView delPackList = (ListView)findViewById(R.id.orderDelList);
 		delPackList.setAdapter(adptDelCode);
 		
@@ -252,14 +252,16 @@ public class OrderScanActivity extends FragmentActivity implements OnClickListen
 		
 		List<StoreCode> lst = adptCode.getAllData();
 		int size = lst.size();
-		if(size == 0){
-			Toaster.show("请扫码后再提交");
-			return;
+//		if(size == 0){
+//			Toaster.show("请扫码后再提交");
+//			return;
+//		}
+		
+		if(size > 0){
+			db.addStoreCode(adptCode.getAllData());//保存新增数据
+			db.addStoreCode(adptDelCode.getAllData());//保存删除数据的状态
+			Toaster.show("保存成功");
 		}
-		
-		db.addStoreCode(adptCode.getAllData());//保存新增数据
-		db.addStoreCode(adptDelCode.getAllData());//保存删除数据的状态
-		
 		finish();
 	}
 	

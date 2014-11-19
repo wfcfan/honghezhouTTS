@@ -27,6 +27,7 @@ public class ProductWrapActivity extends Activity {
 	TextView revEdit;
 	TextView trackEdit;
 	TextView trackCount;
+	RelationCodes model = null;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +49,7 @@ public class ProductWrapActivity extends Activity {
 		if(intent != null && intent.hasExtra("chargeCode")){
 			String chargeCode = intent.getExtras().getString("chargeCode");
 			RelationCodesDB db = new RelationCodesDB(ProductWrapActivity.this);
-			RelationCodes model = db.getRelationCodes(chargeCode);
+			model = db.getRelationCodes(chargeCode);
 			revEdit.setText(model.getSqCode());
 			String tracks = model.getBoxCode();
 			trackEdit.setText(tracks);
@@ -91,7 +92,14 @@ public class ProductWrapActivity extends Activity {
 				RelationCodesDB db = new RelationCodesDB(ProductWrapActivity.this);
 				//不需要判断收取码是否已经存在
 				//RelationCodes model = db.getRelationCodes(revNo);
-				db.addRelationCodes(revNo, trackNo);
+				if(model != null){
+					model.setBoxCode(trackNo);
+					model.setSqCode(revNo);
+					db.updateRelationCodes(model);
+					trackEdit.setEnabled(true);
+				}else{
+					db.addRelationCodes(revNo, trackNo);
+				}
 				
 				Toaster.show("保存成功");
 

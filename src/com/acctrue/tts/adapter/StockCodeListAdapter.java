@@ -19,6 +19,7 @@ public class StockCodeListAdapter extends BaseAdapter{
 	private Context ctx;
 	private List<Boolean> mChecked;
 	private List<StoreCode> datas = new ArrayList<StoreCode>();
+	private boolean hideCheckBox = false;
 	
 	
 	public StockCodeListAdapter(Context ctx, List<StoreCode> lst){
@@ -28,6 +29,15 @@ public class StockCodeListAdapter extends BaseAdapter{
 		for(int i=0;i<datas.size();i++)
 			mChecked.add(false);
 	}
+	
+	public StockCodeListAdapter(Context ctx, List<StoreCode> lst,boolean hideChk){
+		this.ctx = ctx;
+		if(lst != null) datas = lst;
+		mChecked = new ArrayList<Boolean>();
+		for(int i=0;i<datas.size();i++)
+			mChecked.add(false);
+	}
+	
 	
 	public List<StoreCode> getCheckedData(){
 		List<StoreCode> lst = new ArrayList<StoreCode>();
@@ -106,20 +116,27 @@ public class StockCodeListAdapter extends BaseAdapter{
 			ItemViewCache item = new ItemViewCache();
 			final int p = position;
 			item.checkBox = (CheckBox)convertView.findViewById(R.id.selecter);
-			item.checkBox.setOnClickListener(new OnClickListener() {
+			if(hideCheckBox){
+				item.checkBox.setVisibility(View.GONE);
 				
-				@Override
-				public void onClick(View v) {
-					CheckBox cb = (CheckBox) v;
-					mChecked.set(p, cb.isChecked());
-				}
-			});
+			}else{
+				item.checkBox.setOnClickListener(new OnClickListener() {
+					
+					@Override
+					public void onClick(View v) {
+						CheckBox cb = (CheckBox) v;
+						mChecked.set(p, cb.isChecked());
+					}
+				});
+			}
 			item.desc = (TextView)convertView.findViewById(R.id.name);
 			convertView.setTag(item);
 		}
 		ItemViewCache cache = (ItemViewCache)convertView.getTag();
 		
-		cache.checkBox.setChecked(mChecked.get(position));
+		if(!hideCheckBox){
+			cache.checkBox.setChecked(mChecked.get(position));
+		}
 		cache.desc.setText(datas.get(position).getCodeId());
 		
 		return convertView;
