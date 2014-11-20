@@ -57,7 +57,7 @@ public class SplashActivity extends ActivityGroup {
 				// }
 				VersionInfoRequest version = new VersionInfoRequest(
 													GlobalApplication.deviceId,
-													GlobalApplication.currentVersion);
+													GlobalApplication.currentNum);
 				RpcAsyncTask task = new RpcAsyncTask(SplashActivity.this,version,new OnCompleteListener() {
 					@Override
 					public void onComplete(String content) {
