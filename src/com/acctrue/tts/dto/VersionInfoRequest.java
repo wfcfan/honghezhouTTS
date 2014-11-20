@@ -13,9 +13,9 @@ public class VersionInfoRequest implements JsonRest,Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 	private String serialNo;
-	private int versionNum;
+	private String versionNum;
 	
-	public VersionInfoRequest(String serialNo,int versionNum){
+	public VersionInfoRequest(String serialNo,String versionNum){
 		this.serialNo = serialNo;
 		this.versionNum = versionNum;
 	}

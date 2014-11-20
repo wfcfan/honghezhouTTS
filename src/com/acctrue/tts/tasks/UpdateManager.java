@@ -123,7 +123,7 @@ public class UpdateManager {
 	}
 	protected void installApk() {  
 		//String sdpath = Environment.getExternalStorageDirectory().toString();
-		File apkfile = new File(getApkPath() + saveFileName);  
+		File apkfile = new File(ctx.getApplicationContext().getFilesDir().getAbsolutePath() + "/" + saveFileName);  
 		if (!apkfile.exists()) {   
 			return;  
 		}  
@@ -153,7 +153,7 @@ public class UpdateManager {
 				
 				//String apkFile = saveFileName;    
 				//File ApkFile = new File(apkFile);  
-				FileOutputStream outStream = new FileOutputStream(savePath + saveFileName);    
+				FileOutputStream outStream = ctx.openFileOutput(saveFileName, Context.MODE_WORLD_READABLE);    
 				int count = 0;    
 				byte buf[] = new byte[1024];    
 				do {     
