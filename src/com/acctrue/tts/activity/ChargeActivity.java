@@ -3,8 +3,10 @@ package com.acctrue.tts.activity;
 import java.util.List;
 import java.util.UUID;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,8 +38,9 @@ import com.acctrue.tts.utils.ViewUtil;
 
 /**
  * 农产品收取
+ * 
  * @author wangfeng
- *
+ * 
  */
 public class ChargeActivity extends FragmentActivity implements
 		OnClickListener, ChargeFragment1.OnCodeTypeChangeListener {
@@ -111,7 +114,7 @@ public class ChargeActivity extends FragmentActivity implements
 	}
 
 	private void saveData() {
-		final String newId = UUID.randomUUID().toString();
+		String newId = UUID.randomUUID().toString();
 		Charges charges = new Charges();
 		charges.setId(newId);
 
@@ -143,7 +146,7 @@ public class ChargeActivity extends FragmentActivity implements
 		charges.setCreateDate(DateUtil.getDatetime());
 		charges.setState(ChargesStatusEnum.Init.getStateId());
 
-		//=====================================收取码列表
+		// =====================================收取码列表
 		ChargeFragment2 cf2 = (ChargeFragment2) getFragmentManager()
 				.findFragmentById(R.id.tab2);
 		View rooViewF2 = cf2.getView();
@@ -151,28 +154,42 @@ public class ChargeActivity extends FragmentActivity implements
 		ListView listView = (ListView) rooViewF2.findViewById(R.id.lstCode);
 		CodesAdapter adapter = (CodesAdapter) listView.getAdapter();
 		Log.d(TAG, String.valueOf(adapter.getCount()));
-		
+
 		ChargeCodesDB ccDb = new ChargeCodesDB(this);
 		List<String> codeList = adapter.getAllData();
-		if(codeList.size() == 0){
+		if (codeList.size() == 0) {
 			Toaster.show("扫码数据为空,无法提交!");
 			return;
 		}
-		
+
+		Intent intent = this.getIntent();
+		String chargesId = intent.getStringExtra("chargesId");
+
 		ChargesDB cdb = new ChargesDB(this);
-		cdb.addCharges(charges);//保存单据
-		
-		for(String s : codeList){
-			ChargeCodes cc = new ChargeCodes();
-			cc.setChargeId(newId);
-			cc.setCode(s);
-			cc.setState(0);
-			ccDb.addChargeCode(cc);
+		if (TextUtils.isEmpty(chargesId)) {
+			cdb.addCharges(charges);// 保存单据
+			for (String s : codeList) {
+				ChargeCodes cc = new ChargeCodes();
+				cc.setChargeId(newId);
+				cc.setCode(s);
+				cc.setState(0);
+				ccDb.addChargeCode(cc);
+			}
+		} else {
+			charges.setId(chargesId);
+			cdb.updateCharges(charges);
+			ccDb.updateChargeCode(chargesId, codeList);
 		}
-		
+
 		Toaster.show("保存成功!");
-		
-		finish();//返回主界面
+
+		finish();// 返回主界面
+	}
+
+	boolean isNew() {
+		Intent intent = this.getIntent();
+		String chargesId = intent.getStringExtra("chargesId");
+		return TextUtils.isEmpty(chargesId);
 	}
 
 	/**

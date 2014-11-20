@@ -38,6 +38,20 @@ public class ChargesDB {
 		db.close();
 	}
 	
+	public void updateCharges(Charges charges){
+		db = this._ctx.openOrCreateDatabase(Constants.DATABASE_NAME,Constants.DATABASE_CURRENT_VERSION, null);
+		ContentValues values = new ContentValues();
+		values.put("batchno", charges.getBatchno());
+		values.put("ManNo", charges.getManNo());
+		values.put("FarmlandNo", charges.getFarmlandNo());
+		values.put("ProductId", charges.getProductId());
+		values.put("Man", charges.getMan());
+		values.put("IsPackCode", charges.getIsPackCode());
+		
+		db.update(TABLE_CHARGES, values, String.format("Id='%s'",charges.getId()), null);
+		db.close();
+	}
+	
 	public void deleteCharges(String id){
 		db = this._ctx.openOrCreateDatabase(Constants.DATABASE_NAME, Constants.DATABASE_CURRENT_VERSION, null);
 		db.delete(TABLE_CHARGES, String.format("Id='%s'",id), null);

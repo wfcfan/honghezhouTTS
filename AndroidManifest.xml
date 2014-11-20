@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.acctrue.tts"
-    android:versionName="v0.14 beta" >
+    android:versionCode="13"
+    android:versionName="v0.15 beta" >
 
     <uses-sdk
         android:minSdkVersion="14"

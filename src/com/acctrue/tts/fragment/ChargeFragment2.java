@@ -2,6 +2,7 @@ package com.acctrue.tts.fragment;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import android.app.Activity;
 import android.app.Fragment;
@@ -55,9 +56,7 @@ public class ChargeFragment2 extends Fragment implements OnClickListener {
 		}
 		
 		// -----------生成测试数据
-		//codesData.add(UUID.randomUUID().toString());
-		//codesData.add(UUID.randomUUID().toString());
-		//codesData.add(UUID.randomUUID().toString());
+		//codesData.add("114000051100200");
 
 		adapter = new CodesAdapter(mAct, codesData);
 		// 初始化下拉列表
