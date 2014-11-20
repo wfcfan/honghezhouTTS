@@ -16,7 +16,6 @@ public class GlobalApplication extends Application {
 	public static GlobalApplication mApp;
 	public static String deviceId;
 	public static String currentVersion;
-	public static int currentCode;
 	
 	@Override
 	public void onCreate() {
@@ -40,8 +39,6 @@ public class GlobalApplication extends Application {
 			deviceId = tm.getDeviceId();
 			currentVersion = getPackageManager().getPackageInfo(
 					getPackageName(), 0).versionName;
-			currentCode = getPackageManager().getPackageInfo(
-					getPackageName(), 0).versionCode;
 
 			try {
 				// 这个的作用就是将 AsyncTask初始化到主线程

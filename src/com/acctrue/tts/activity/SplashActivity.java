@@ -57,7 +57,7 @@ public class SplashActivity extends ActivityGroup {
 				// }
 				VersionInfoRequest version = new VersionInfoRequest(
 													GlobalApplication.deviceId,
-													GlobalApplication.currentCode + "");
+													GlobalApplication.currentVersion);
 				RpcAsyncTask task = new RpcAsyncTask(SplashActivity.this,version,new OnCompleteListener() {
 					@Override
 					public void onComplete(String content) {
@@ -119,7 +119,7 @@ public class SplashActivity extends ActivityGroup {
 	}
 	
 	private void updateVersion(String url,String msg){
-		UpdateManager upManager = new UpdateManager(SplashActivity.this,url);
+		UpdateManager upManager = new UpdateManager(this,url);
 		upManager.setUpdateMsg(msg);
 		upManager.checkUpdateInfo();
 	}

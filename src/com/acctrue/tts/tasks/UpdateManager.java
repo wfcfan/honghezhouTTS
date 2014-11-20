@@ -70,7 +70,6 @@ public class UpdateManager {
 	}
 	private String getApkPath(){
 		//return "/data/data/" + ctx.getPackageName() + "/apktemp/";
-		http://sy.17ghh.cn/TTS/Portal/PhoneUpdates/Android/Android13.apk
 		return Environment.getExternalStorageDirectory() + "/download/";
 	}
 	// 显示更新程序对话框，供主程序调用 
@@ -124,20 +123,15 @@ public class UpdateManager {
 	}
 	protected void installApk() {  
 		//String sdpath = Environment.getExternalStorageDirectory().toString();
-//		File apkfile = new File(getApkPath() + saveFileName);  
-//		if (!apkfile.exists()) {   
-//			return;  
-//		}  
-		Intent intent = new Intent(Intent.ACTION_VIEW);  
-		
-		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-		intent.setDataAndType(
-				   Uri.parse("file://"+ctx.getApplicationContext().getFilesDir().getAbsolutePath() + "/" + saveFileName),
-				   "application/vnd.android.package-archive");
-		//i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-		//i.setDataAndType(Uri.parse("file://" + apkfile.toString()), "application/vnd.android.package-archive");
+		File apkfile = new File(getApkPath() + saveFileName);  
+		if (!apkfile.exists()) {   
+			return;  
+		}  
+		Intent i = new Intent(Intent.ACTION_VIEW);  
+		i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		i.setDataAndType(Uri.parse("file://" + apkfile.toString()), "application/vnd.android.package-archive");
 		// File.toString()会返回路径信息  
-		ctx.startActivity(intent); 
+		ctx.startActivity(i); 
 	} 
 	
 	private Runnable mdownApkRunnable = new Runnable() {  
@@ -159,9 +153,7 @@ public class UpdateManager {
 				
 				//String apkFile = saveFileName;    
 				//File ApkFile = new File(apkFile);  
-				//FileOutputStream outStream = new FileOutputStream(ctx.getFilesDir() + saveFileName); 
-				FileOutputStream outStream = ctx.openFileOutput(saveFileName,
-					       ctx.MODE_WORLD_READABLE);
+				FileOutputStream outStream = new FileOutputStream(savePath + saveFileName);    
 				int count = 0;    
 				byte buf[] = new byte[1024];    
 				do {     
