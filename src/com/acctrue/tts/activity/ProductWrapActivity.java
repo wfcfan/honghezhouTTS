@@ -3,6 +3,8 @@ package com.acctrue.tts.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -25,7 +27,7 @@ import com.acctrue.tts.utils.ViewUtil;
 public class ProductWrapActivity extends Activity {
 	//TextView scanEdit;
 	TextView revEdit;
-	TextView trackEdit;
+	EditText trackEdit;
 	TextView trackCount;
 	RelationCodes model = null;
 	
@@ -41,8 +43,34 @@ public class ProductWrapActivity extends Activity {
 	private void init(){
 		//scanEdit = (TextView)findViewById(R.id.scanEdit);
 		revEdit = (TextView)findViewById(R.id.edtRevNo);
-		trackEdit = (TextView)findViewById(R.id.edtTrackNo);
+		trackEdit = (EditText)findViewById(R.id.edtTrackNo);
 		trackCount = (TextView)findViewById(R.id.trackCount);
+		
+		trackEdit.addTextChangedListener(new TextWatcher() {
+			
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+			}
+			
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+				
+			}
+			
+			@Override
+			public void afterTextChanged(Editable s) {
+				String oldStr = s.toString().trim();
+				int count = 0;
+				int len = oldStr.length();
+				if(oldStr.length() > 0){
+					if(oldStr.charAt(len - 1) == ',')
+						oldStr = oldStr.substring(0, len - 2);
+					count = oldStr.split(",").length;
+				}
+				trackCount.setText("" + count);
+			}
+		});
 		
 		//
 		Intent intent = getIntent();
@@ -149,16 +177,15 @@ public class ProductWrapActivity extends Activity {
 		}else{
 			trackEdit.setEnabled(true);
 			String oldStr = trackEdit.getText().toString().trim();
-			int count = 0;
-			if(oldStr.length() == 0){
+			int len = oldStr.length();
+			if(len == 0){
 				oldStr = scanno;
-				count = 1;
 			}else{
-				oldStr += "," + scanno;
-				count = oldStr.split(",").length;
+				if(oldStr.charAt(len -1) == ',')
+					oldStr += scanno;
+				else
+					oldStr += "," + scanno;
 			}
-			
-			trackCount.setText("" + count);
 			trackEdit.setText(oldStr);
 		}
 		findViewById(R.id.btnNew).setFocusable(true);

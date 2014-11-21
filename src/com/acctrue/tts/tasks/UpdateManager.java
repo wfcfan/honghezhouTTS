@@ -155,7 +155,7 @@ public class UpdateManager {
 				//File ApkFile = new File(apkFile);  
 				FileOutputStream outStream = ctx.openFileOutput(saveFileName, Context.MODE_WORLD_READABLE);    
 				int count = 0;    
-				byte buf[] = new byte[1024];    
+				byte buf[] = new byte[2048];    
 				do {     
 					int numread = ins.read(buf);     
 					count += numread;     
