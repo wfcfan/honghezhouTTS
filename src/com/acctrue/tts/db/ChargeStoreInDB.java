@@ -53,7 +53,7 @@ public class ChargeStoreInDB {
 				Constants.DATABASE_DEFAULT_VERSION, null);
 		List<ChargeStoreInCode> list = new ArrayList<ChargeStoreInCode>();
 		Cursor c = db.query(TABLE_CHARGESTOREINCODE, new String[] { "StoreInId",
-				"Code", "IsStoreIn"}, null, null, null, null,
+				"Code", "IsStoreIn"}, String.format("StoreInId='%s'", storeId), null, null, null,
 				null);
 		while(c.moveToNext()){
 			ChargeStoreInCode cic = new ChargeStoreInCode();

@@ -12,9 +12,9 @@ public class HongHeZhouDB {
 	private SQLiteDatabase db;
 	
 	private static final String CREATE_TABLE_CHARGECODES = "create table if not exists ChargeCodes(ChargeId char(36),Code text,IsStoreIn integer,createTime text)";
-	private static final String CREATE_TABLE_CHARGES = "create table if not exists Charges(Id char(36) primary key,batchno text,ManNo text,FarmlandNo text,ProductId text, CreateDate text,Man text,State INTEGER,IsPackCode INTEGER,Weight text)";
+	private static final String CREATE_TABLE_CHARGES = "create table if not exists Charges(Id char(36) primary key,batchno text,ManNo text,ManName text,FarmlandNo text,FarmlandName text,ProductId text,ProductName text, CreateDate text,Man text,State INTEGER,IsPackCode INTEGER,Weight text)";
 	private static final String CREATE_TABLE_CHARGESTOREIN = "create table if not exists ChargeStoreIn(Id text primary key,WarehouseId INTEGER,warehouseName text,Actor text,ActDate text)";
-	private static final String CREATE_TABLE_CHARGESTOREINCODE = "create table if not exists ChargeStoreInCode(StoreInId text primary key,Code text,IsStoreIn integer)";
+	private static final String CREATE_TABLE_CHARGESTOREINCODE = "create table if not exists ChargeStoreInCode(StoreInId text,Code text,IsStoreIn integer)";
 	private static final String CREATE_TABLE_FARMLANDS = "create table if not exists FarmLands(FarmLandCode text,FarmLandName text,UserOwnerId integer,UserOwnerDisplayName text)";
 	private static final String CREATE_TABLE_PRODUCTS = "create table if not exists Products(ProductId integer,ProductName text)";
 	private static final String CREATE_TABLE_RELATIONCODES = "create table if not exists RelationCodes(Id text primary key,BoxCode text,SQCode text,CreateDate text,Man text)";

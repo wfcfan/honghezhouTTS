@@ -123,7 +123,7 @@ public class FormMgrActivity extends Activity implements OnClickListener {
 		whLayout.setVisibility(View.GONE);
 		
 		Dialog detailDialog = new AlertDialog.Builder(this)
-		.setTitle("入库称重")
+		.setTitle("出库称重")
 		.setView(dialogView)
 		.setPositiveButton(R.string.btn_ok_tip, new DialogInterface.OnClickListener() {
 

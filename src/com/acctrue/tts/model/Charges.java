@@ -20,8 +20,11 @@ public class Charges implements JsonRest, Serializable {
 	private String id;
 	private String batchno;
 	private String manNo;
+	private String manName;
 	private String farmlandNo;
+	private String farmlandName;
 	private String productId;
+	private String productName;
 	private String createDate;
 	private String man;
 	private int state;
@@ -107,6 +110,30 @@ public class Charges implements JsonRest, Serializable {
 		this.isPackCode = isPackCode;
 	}
 
+	public String getManName() {
+		return manName;
+	}
+
+	public void setManName(String manName) {
+		this.manName = manName;
+	}
+
+	public String getFarmlandName() {
+		return farmlandName;
+	}
+
+	public void setFarmlandName(String farmlandName) {
+		this.farmlandName = farmlandName;
+	}
+
+	public String getProductName() {
+		return productName;
+	}
+
+	public void setProductName(String productName) {
+		this.productName = productName;
+	}
+
 	public String getWeight() {
 		return weight;
 	}
@@ -127,23 +154,23 @@ public class Charges implements JsonRest, Serializable {
 	public void setCodes(List<String> codes) {
 		this.codes = codes;
 	}
-	
-	public void setChargeCodes(List<ChargeCodes> codes){
+
+	public void setChargeCodes(List<ChargeCodes> codes) {
 		List<String> list = new ArrayList<String>();
-		for(ChargeCodes c : codes){
+		for (ChargeCodes c : codes) {
 			list.add(c.getCode());
 		}
 		this.codes = list;
 	}
-	
+
 	@Override
 	public boolean equals(Object o) {
-		if(o == null)
+		if (o == null)
 			return false;
-		if(o instanceof Charges){
-			Charges c = (Charges)o;
+		if (o instanceof Charges) {
+			Charges c = (Charges) o;
 			return this.batchno.equals(c.batchno);
-		}else{
+		} else {
 			return false;
 		}
 	}
@@ -174,7 +201,7 @@ public class Charges implements JsonRest, Serializable {
 			obj.put("ProductId", this.productId);
 			obj.put("UserId", u.getUserId());
 			obj.put("Weight", this.weight);
-			
+
 			if (this.codes != null && !this.codes.isEmpty()) {
 				JSONArray arr = new JSONArray();
 				for (String s : this.codes) {
@@ -182,7 +209,7 @@ public class Charges implements JsonRest, Serializable {
 				}
 				obj.put("Codes", arr);
 			}
-			
+
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}

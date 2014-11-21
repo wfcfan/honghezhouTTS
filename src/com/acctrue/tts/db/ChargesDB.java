@@ -34,6 +34,10 @@ public class ChargesDB {
 		values.put("State", charges.getState());
 		values.put("IsPackCode", charges.getIsPackCode());
 		values.put("Weight", charges.getWeight());
+		
+		values.put("ManName", charges.getManName());
+		values.put("FarmlandName", charges.getFarmlandName());
+		values.put("ProductName", charges.getProductName());
 		db.insert(TABLE_CHARGES, null, values);
 		db.close();
 	}
@@ -47,6 +51,9 @@ public class ChargesDB {
 		values.put("ProductId", charges.getProductId());
 		values.put("Man", charges.getMan());
 		values.put("IsPackCode", charges.getIsPackCode());
+		values.put("ManName", charges.getManName());
+		values.put("FarmlandName", charges.getFarmlandName());
+		values.put("ProductName", charges.getProductName());
 		
 		db.update(TABLE_CHARGES, values, String.format("Id='%s'",charges.getId()), null);
 		db.close();
@@ -70,7 +77,7 @@ public class ChargesDB {
 	public Charges getCharge(String id){
 		db = this._ctx.openOrCreateDatabase(Constants.DATABASE_NAME, Constants.DATABASE_CURRENT_VERSION, null);
 		Cursor c = db.query(TABLE_CHARGES, new String[] { "Id",
-				"batchno","ManNo","FarmlandNo","ProductId","CreateDate","Man","State","IsPackCode","Weight"}, String.format("Id='%s'", id), null, null, null, null);
+				"batchno","ManNo","FarmlandNo","ProductId","CreateDate","Man","State","IsPackCode","Weight","ManName","FarmlandName","ProductName"}, String.format("Id='%s'", id), null, null, null, null);
 		Charges charges = null;
 		while(c.moveToNext()){
 			charges = new Charges();
@@ -84,6 +91,10 @@ public class ChargesDB {
 			charges.setState(c.getInt(c.getColumnIndex("State")));
 			charges.setIsPackCode(c.getInt(c.getColumnIndex("IsPackCode")));
 			charges.setWeight(c.getString(c.getColumnIndex("Weight")));
+			
+			charges.setManName(c.getString(c.getColumnIndex("ManName")));
+			charges.setFarmlandName(c.getString(c.getColumnIndex("FarmlandName")));
+			charges.setProductName(c.getString(c.getColumnIndex("ProductName")));
 		}
 		c.close();
 		db.close();
@@ -94,7 +105,7 @@ public class ChargesDB {
 		List<Charges> list = new ArrayList<Charges>();
 		db = this._ctx.openOrCreateDatabase(Constants.DATABASE_NAME, Constants.DATABASE_CURRENT_VERSION, null);
 		Cursor c = db.query(TABLE_CHARGES, new String[] { "Id",
-				"batchno","ManNo","FarmlandNo","ProductId","CreateDate","Man","State","IsPackCode","Weight"}, null, null, null, null, "CreateDate desc");
+				"batchno","ManNo","FarmlandNo","ProductId","CreateDate","Man","State","IsPackCode","Weight","ManName","FarmlandName","ProductName"}, null, null, null, null, "CreateDate desc");
 		while(c.moveToNext()){
 			Charges charges = new Charges();
 			charges.setId(c.getString(c.getColumnIndex("Id")));
@@ -108,6 +119,9 @@ public class ChargesDB {
 			charges.setIsPackCode(c.getInt(c.getColumnIndex("IsPackCode")));
 			charges.setWeight(c.getString(c.getColumnIndex("Weight")));
 			
+			charges.setManName(c.getString(c.getColumnIndex("ManName")));
+			charges.setFarmlandName(c.getString(c.getColumnIndex("FarmlandName")));
+			charges.setProductName(c.getString(c.getColumnIndex("ProductName")));
 			list.add(charges);
 		}
 		c.close();

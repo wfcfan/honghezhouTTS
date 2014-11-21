@@ -133,15 +133,18 @@ public class ChargeActivity extends FragmentActivity implements
 		Spinner sman = (Spinner) rooViewF1.findViewById(R.id.spinner1);
 		Farmers farmers = (Farmers) sman.getSelectedItem();
 		charges.setManNo(farmers.getFarmerId());
+		charges.setManName(farmers.getFarmerName());
 
 		Spinner stian = (Spinner) rooViewF1.findViewById(R.id.spinnerFarm);
 		FarmLands farmlads = (FarmLands) stian.getSelectedItem();
 		charges.setFarmlandNo(farmlads.getFarmLandCode());
-
+		charges.setFarmlandName(farmlads.getFarmLandName());
+		
 		Spinner sprod = (Spinner) rooViewF1.findViewById(R.id.spinnerProd);
 		Product prd = (Product) sprod.getSelectedItem();
 		charges.setProductId(String.valueOf(prd.getProductId()));
-
+		charges.setProductName(prd.getProductName());
+		
 		charges.setMan(AccountUtil.getCurrentUser().getUserInfo().getUserName());
 		charges.setCreateDate(DateUtil.getDatetime());
 		charges.setState(ChargesStatusEnum.Init.getStateId());

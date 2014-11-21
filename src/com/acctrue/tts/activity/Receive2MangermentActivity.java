@@ -1,5 +1,6 @@
 package com.acctrue.tts.activity;
 
+import java.lang.reflect.Field;
 import java.util.List;
 
 import org.json.JSONObject;
@@ -65,6 +66,7 @@ public class Receive2MangermentActivity extends Activity implements
 	private final String TAG = Receive2MangermentActivity.class.getSimpleName();
 	private static final int ITEM_MODIFY = 1;
 	private static final int ITEM_DELETE = 2;
+	ChargeCodesDB db2;
 
 	@Override
 	public void onCreate(final Bundle savedInstanceState) {
@@ -72,6 +74,7 @@ public class Receive2MangermentActivity extends Activity implements
 		this.setContentView(R.layout.activity_receive2mgmt);
 
 		ViewUtil.initHeader(this, "收取码管理");
+		db2 = new ChargeCodesDB(this);
 		this.init();
 	}
 
@@ -81,7 +84,6 @@ public class Receive2MangermentActivity extends Activity implements
 		ChargesDB db = new ChargesDB(this);
 
 		List<Charges> list = db.getCharges();
-		ChargeCodesDB db2 = new ChargeCodesDB(this);
 
 		for (int i = 0; i < list.size(); i++) {
 			Charges c = list.get(i);
@@ -134,11 +136,11 @@ public class Receive2MangermentActivity extends Activity implements
 		this.setViewText((TextView) detailView.findViewById(R.id.textView1),
 				c.getBatchno());
 		this.setViewText((TextView) detailView.findViewById(R.id.textView2),
-				c.getManNo());
+				c.getManName());
 		this.setViewText((TextView) detailView.findViewById(R.id.textView3),
-				c.getFarmlandNo());
+				c.getFarmlandName());
 		this.setViewText((TextView) detailView.findViewById(R.id.textView4),
-				c.getProductId());
+				c.getProductName());
 		this.setViewText((TextView) detailView.findViewById(R.id.textView5),
 				c.getCreateDate());
 		this.setViewText((TextView) detailView.findViewById(R.id.textView6),
@@ -245,7 +247,8 @@ public class Receive2MangermentActivity extends Activity implements
 
 		switch (item.getItemId()) {
 		case ITEM_MODIFY:
-			Intent intent =  new Intent(Receive2MangermentActivity.this, ChargeActivity.class);
+			Intent intent = new Intent(Receive2MangermentActivity.this,
+					ChargeActivity.class);
 			intent.putExtra("chargesId", id);
 			startActivity(intent);
 			break;
@@ -315,11 +318,28 @@ public class Receive2MangermentActivity extends Activity implements
 						new DialogInterface.OnClickListener() {
 
 							@Override
-							public void onClick(DialogInterface arg0, int arg1) {
+							public void onClick(DialogInterface dialog, int arg1) {
 								EditText editWeight = (EditText) dialogView
 										.findViewById(R.id.editWeight);
 								String strWeight = editWeight.getText()
 										.toString();
+
+								if (TextUtils.isEmpty(strWeight)) {
+									Toaster.show("重量不能为空!");
+
+									try {
+										Field field = dialog.getClass()
+												.getSuperclass()
+												.getDeclaredField("mShowing");
+										field.setAccessible(true);
+										field.set(dialog, false);
+									} catch (Exception e) {
+										e.printStackTrace();
+									}
+
+									return;
+								}
+
 								String strUnit = (String) sp1.getSelectedItem();
 								strWeight += strUnit;// 完整重量
 

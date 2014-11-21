@@ -109,8 +109,8 @@ public class StoreDB {
 	
 	public void addStoreCode(List<StoreCode> scList){
 		for(StoreCode sc : scList){
-			StoreCode temp = getStoreCode(sc.getId());
-			if(temp != null)
+			StoreCode temp = getStoreCode(sc.getId());//查询该码是否存在
+			if(temp != null)//如果存在，直接忽略
 				continue;
 			this.addStoreCode(sc);
 		}

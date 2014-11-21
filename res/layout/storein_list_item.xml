@@ -4,21 +4,23 @@
     android:layout_height="match_parent"
     android:layout_marginLeft="2dp"
     android:layout_marginRight="2dp"
+    android:descendantFocusability="blocksDescendants"
     android:orientation="horizontal" >
 
     <CheckBox
         android:id="@+id/chk"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content" />
 
     <TextView
         android:id="@+id/desc"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1" />
-    <TextView 
-        android:id="@+id/time" 
+
+    <TextView
+        android:id="@+id/time"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content" />
 
 </LinearLayout>

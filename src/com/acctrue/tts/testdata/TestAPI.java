@@ -132,7 +132,7 @@ public final class TestAPI {
 	
 	static public StoreCode getStoreCode(String storeId,String cid){
 		StoreCode sc = new StoreCode();
-		sc.setStoreId(cid);
+		sc.setStoreId(storeId);
 		sc.setId(UUID.randomUUID().toString());
 		sc.setCreateTime(DateUtil.getDatetime());
 		sc.setCodeId(cid);

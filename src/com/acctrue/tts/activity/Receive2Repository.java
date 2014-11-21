@@ -86,13 +86,24 @@ public class Receive2Repository extends Activity implements OnClickListener {
 		if(wid != 0){
 			;
 		}
-
+		
+		String id = this.getIntent().getStringExtra("id");
+		if(!TextUtils.isEmpty(id)){
+			ChargeStoreInDB db = new ChargeStoreInDB(this);
+			List<ChargeStoreInCode> ciclist = db.getChargeStoreInCode(id);
+			for(ChargeStoreInCode cic  : ciclist){
+				codes.add(cic.getCode());
+			}
+		}
+		
 		ArrayAdapter<String> adptRev = new ArrayAdapter<String>(this,
 				android.R.layout.simple_list_item_checked, codes);
 		ctrlCodes = (ListView) findViewById(R.id.noList);
 		ctrlCodes.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
 		ctrlCodes.setAdapter(adptRev);
 	}
+	
+	
 
 	@Override
 	public void onClick(View view) {
@@ -145,7 +156,7 @@ public class Receive2Repository extends Activity implements OnClickListener {
 		whLayout.setVisibility(View.GONE);
 		
 		Dialog detailDialog = new AlertDialog.Builder(this)
-		.setTitle("入库称重")
+		.setTitle("称重")
 		.setView(dialogView)
 		.setPositiveButton(R.string.btn_ok_tip, new DialogInterface.OnClickListener() {
 
