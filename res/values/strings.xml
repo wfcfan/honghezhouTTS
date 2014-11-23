@@ -21,6 +21,7 @@
     <string name="submit">提交</string>
     <string name="cancel">取消</string>
     <string name="btn_ok_tip">确定</string>
+    <string name="btn_save_tip">保存</string>
     <string name="btn_del">删除</string>
     <string name="serverAddress_tip">服务器地址:</string>
     <string name="serverAddress_hint">服务器接口地址</string>
@@ -71,10 +72,11 @@
     <string name="upload_all_tip">上传全部</string>
     <string name="modify_tip">修改</string>
     <string name="add_tip">添加</string>
-    <string name="receive_no_tip">收取码</string>
-    <string name="track_no_tip">追溯码</string>
+    <string name="receive_no_tip">收取码：</string>
+    <string name="track_no_tip">追溯码：</string>
     <string name="orderno_tip">单据号：</string>
     <string name="relation_corp_tip">往来企业：</string>
+    <string name="realtion_xycorp_tip">下游客户：</string>
     <string name="query_tip">查询</string>
     <string name="confirm_tip">确定</string>
     <string name="orderinfo_tip">单据信息</string>
@@ -116,7 +118,7 @@
     <string name="form_BizCorpNameZD">直调企业：</string>
     <string name="form_Actor">操作员：</string>
     <string name="form_ActDate">操作时间：</string>
-    
+    <string name="keyword_hint">请输入关键字</string>
     <string name="soft_update_no">已经是最新版本</string>
     <string name="soft_update_title">软件更新</string>
     <string name="soft_update_info">检测到新版本，立即更新吗</string>
@@ -141,4 +143,9 @@
     <string name="store_no_tip">单据号:</string>
     <string name="store_bizcorp_tip">往来企业:</string>
     <string name="store_date_tip">单据日期:</string>
+    
+    <string name="login_type_off_hip">离线方式：</string>
+    
+    <string name="pw_sm_hip1">收取码扫描</string>
+    <string name="pw_sm_hip2">追溯码扫描</string>
 </resources>

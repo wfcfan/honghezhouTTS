@@ -121,9 +121,10 @@ public class ChargeActivity extends FragmentActivity implements
 		ChargeFragment1 cf1 = (ChargeFragment1) getFragmentManager()
 				.findFragmentById(R.id.tab1);
 		View rooViewF1 = cf1.getView();
-
-		EditText editText1 = (EditText) rooViewF1.findViewById(R.id.editText1);
-		charges.setBatchno(editText1.getText().toString());
+		
+		//==================禁用批号
+//		EditText editText1 = (EditText) rooViewF1.findViewById(R.id.editText1);
+//		charges.setBatchno(editText1.getText().toString());
 
 		Spinner sct = (Spinner) rooViewF1.findViewById(R.id.spinnerCodeType);
 		String ct = sct.getSelectedItem().toString();
@@ -135,10 +136,11 @@ public class ChargeActivity extends FragmentActivity implements
 		charges.setManNo(farmers.getFarmerId());
 		charges.setManName(farmers.getFarmerName());
 
-		Spinner stian = (Spinner) rooViewF1.findViewById(R.id.spinnerFarm);
-		FarmLands farmlads = (FarmLands) stian.getSelectedItem();
-		charges.setFarmlandNo(farmlads.getFarmLandCode());
-		charges.setFarmlandName(farmlads.getFarmLandName());
+		//--禁用农田
+//		Spinner stian = (Spinner) rooViewF1.findViewById(R.id.spinnerFarm);
+//		FarmLands farmlads = (FarmLands) stian.getSelectedItem();
+//		charges.setFarmlandNo(farmlads.getFarmLandCode());
+//		charges.setFarmlandName(farmlads.getFarmLandName());
 		
 		Spinner sprod = (Spinner) rooViewF1.findViewById(R.id.spinnerProd);
 		Product prd = (Product) sprod.getSelectedItem();

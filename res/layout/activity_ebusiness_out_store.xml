@@ -9,8 +9,15 @@
     <ListView
         android:id="@+id/lstReps"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dip"
+        android:layout_weight="1"
         android:background="@drawable/list_border" >
     </ListView>
+
+    <TextView
+        android:id="@+id/txtTip"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
 </LinearLayout>

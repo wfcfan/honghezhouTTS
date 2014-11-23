@@ -8,11 +8,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.acctrue.tts.dto.LoginResponse.UserInfo;
 import com.acctrue.tts.enums.ChargesStatusEnum;
 import com.acctrue.tts.enums.CodeTypeEnum;
 import com.acctrue.tts.rpc.JsonRest;
-import com.acctrue.tts.utils.AccountUtil;
 import com.acctrue.tts.utils.DateUtil;
 
 @SuppressWarnings("serial")
@@ -31,6 +29,7 @@ public class Charges implements JsonRest, Serializable {
 	private int isPackCode;
 	private String weight;
 	private List<String> codes;
+	private int isAutoStorage;
 
 	public String getId() {
 		return id;
@@ -142,6 +141,14 @@ public class Charges implements JsonRest, Serializable {
 		this.weight = weight;
 	}
 
+	public int getIsAutoStorage() {
+		return isAutoStorage;
+	}
+
+	public void setIsAutoStorage(int isAutoStorage) {
+		this.isAutoStorage = isAutoStorage;
+	}
+
 	public final String getPackCodeName() {
 		CodeTypeEnum ct = CodeTypeEnum.getCodeTypeEnumById(isPackCode);
 		return ct.getName();
@@ -169,7 +176,7 @@ public class Charges implements JsonRest, Serializable {
 			return false;
 		if (o instanceof Charges) {
 			Charges c = (Charges) o;
-			return this.batchno.equals(c.batchno);
+			return this.id.equals(c.id);
 		} else {
 			return false;
 		}
@@ -192,14 +199,14 @@ public class Charges implements JsonRest, Serializable {
 	public JSONObject toJsonObject() {
 		JSONObject obj = new JSONObject();
 		try {
-			UserInfo u = AccountUtil.getCurrentUser().getUserInfo();
+			//UserInfo u = AccountUtil.getCurrentUser().getUserInfo();
 			obj.put("Actor", this.man);
 			obj.put("ActorDate", DateUtil.parseDatetimeToJsonDate());
 			obj.put("BatchNo", this.batchno);
 			obj.put("FarmlandCode", this.farmlandNo);
-			obj.put("IsAutoStorage", this.state);
+			obj.put("IsAutoStorage", this.isAutoStorage);
 			obj.put("ProductId", this.productId);
-			obj.put("UserId", u.getUserId());
+			obj.put("UserId", this.manNo);
 			obj.put("Weight", this.weight);
 
 			if (this.codes != null && !this.codes.isEmpty()) {

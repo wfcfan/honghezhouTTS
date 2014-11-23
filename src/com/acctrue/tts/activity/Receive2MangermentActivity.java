@@ -42,11 +42,11 @@ import com.acctrue.tts.dto.UploadChargeCodesResponse;
 import com.acctrue.tts.dto.UploadChargeStoreInfoRequest;
 import com.acctrue.tts.dto.UploadChargeStoreInfoRequest.UploadChargeStoreInfo;
 import com.acctrue.tts.dto.UploadChargeStoreInfoResponse;
+import com.acctrue.tts.enums.ChargesChargesEnum;
 import com.acctrue.tts.enums.ChargesStatusEnum;
 import com.acctrue.tts.enums.CodeTypeEnum;
 import com.acctrue.tts.model.ChargeCodes;
 import com.acctrue.tts.model.Charges;
-import com.acctrue.tts.model.Warehouse;
 import com.acctrue.tts.rpc.OnCompleteListener;
 import com.acctrue.tts.rpc.RpcAsyncTask;
 import com.acctrue.tts.tasks.TaskUtils;
@@ -191,20 +191,20 @@ public class Receive2MangermentActivity extends Activity implements
 			uploadCharges(adpt, dataList, isAutoStorage);
 			break;
 		case R.id.btnUploadAll:
-			dataList = adpt.getAllDatas();
+			//dataList = adpt.getAllDatas();
 			// if(status == ChargesStatusEnum.Uploaded)
 			// uploadCharges(adpt, dataList,isAutoStorage);
 			// else
 			// showWarehouse(false, dataList, adpt);
-			uploadCharges(adpt, dataList, isAutoStorage);
+			//uploadCharges(adpt, dataList, isAutoStorage);
 			break;
 		case R.id.btnDel:
 			dataList = adpt.getCheckedData();
 			delCharges(dataList, adpt);
 			break;
 		case R.id.btnRepo:
-			dataList = adpt.getCheckedData();
-			showWarehouse(true, dataList, adpt);
+			//dataList = adpt.getCheckedData();
+			// showWarehouse(dataList, adpt);
 			break;
 		case R.id.btnNew:
 			Intent intent = new Intent(Receive2MangermentActivity.this,
@@ -262,22 +262,40 @@ public class Receive2MangermentActivity extends Activity implements
 		return false;
 	}
 
-	void delCharges(List<Charges> chargesList, Receive2MangermentAdapter adpt) {
+	void delCharges(final List<Charges> chargesList,
+			final Receive2MangermentAdapter adpt) {
 		if (chargesList.size() == 0) {
 			Toaster.show("请先选择数据行!");
 			return;
 		}
 
-		final ChargesDB chargesDB = new ChargesDB(this);
-		for (Charges charges : chargesList) {
-			// if(charges.getState() ==
-			// ChargesStatusEnum.Uploaded.getStateId()){
-			// Toaster.show("已上传的收取不能进行删除!");
-			// break;
-			// }
-			chargesDB.deleteCharges(charges.getId());
-			adpt.RemoveItems(chargesList);
-		}
+		Dialog detailDialog = new AlertDialog.Builder(this)
+				.setTitle("确认删除？")
+				.setPositiveButton(R.string.btn_ok_tip,
+						new DialogInterface.OnClickListener() {
+
+							@Override
+							public void onClick(DialogInterface arg0, int arg1) {
+								final ChargesDB chargesDB = new ChargesDB(
+										Receive2MangermentActivity.this);
+								for (Charges charges : chargesList) {
+									chargesDB.deleteCharges(charges.getId());
+									adpt.RemoveItems(chargesList);
+								}
+							}
+
+						})
+				.setNegativeButton(R.string.cancel,
+						new DialogInterface.OnClickListener() {
+
+							@Override
+							public void onClick(DialogInterface dialog,
+									int which) {
+								dialog.dismiss();
+
+							}
+						}).create();
+		detailDialog.show();
 	}
 
 	void uploadCharges(Receive2MangermentAdapter adapter,
@@ -288,12 +306,211 @@ public class Receive2MangermentActivity extends Activity implements
 		}
 
 		for (Charges charges : chargesList) {
-			upload(charges, adapter, isAutoStorage);// 上传数据到服务器
+			if (charges.getState() == ChargesChargesEnum.Uploaded.getStateId()) {
+				UserInfo user = AccountUtil.getCurrentUser().getUserInfo();
+				UploadChargeStoreInfo ucs = new UploadChargeStoreInfo();
+				ucs.setActor(user.getUserName());
+				ucs.setActorDate(DateUtil.parseDatetimeToJsonDate(charges
+						.getCreateDate()));
+				ucs.setChargeCodes(charges.getCodes());
+				ucs.setCorpId(user.getCorpId());
+				charges.setWeight("0");
+				ucs.setWeight("0");
+				inStock(charges, ucs, adapter);
+			} else {
+				upload(charges, adapter, isAutoStorage);// 上传数据到服务器
+			}
 		}
 	}
 
 	void showWeight(final Charges c, final Receive2MangermentAdapter adapter,
 			final int isAutoStorage) {
+		LayoutInflater layoutInflater = LayoutInflater.from(this);
+		// ================选择计量单位布局
+		final View dialogView = layoutInflater.inflate(R.layout.dialog_weight,
+				null);
+
+		// ==============计量单位控件
+		final Spinner sp1 = (Spinner) dialogView.findViewById(R.id.spinnerUnit);
+		final String[] mItems = this.getResources().getStringArray(
+				R.array.unitList);
+		ArrayAdapter<String> unitsData = new ArrayAdapter<String>(this,
+				android.R.layout.simple_spinner_item, mItems);
+		sp1.setAdapter(unitsData);// 设置计量单位数据
+
+		LinearLayout whLayout = (LinearLayout) dialogView
+				.findViewById(R.id.layoutWh);
+		whLayout.setVisibility(View.GONE);
+
+		Dialog detailDialog = new AlertDialog.Builder(this)
+				.setTitle(c.getManName() + "--入库称重")
+				.setView(dialogView)
+				.setPositiveButton(R.string.btn_ok_tip,
+						new DialogInterface.OnClickListener() {
+
+							@Override
+							public void onClick(DialogInterface dialog, int arg1) {
+								EditText editWeight = (EditText) dialogView
+										.findViewById(R.id.editWeight);
+								String strWeight = editWeight.getText()
+										.toString();
+
+								if (TextUtils.isEmpty(strWeight)) {
+									Toaster.show("重量不能为空!");
+
+									try {
+										Field field = dialog.getClass()
+												.getSuperclass()
+												.getDeclaredField("mShowing");
+										field.setAccessible(true);
+										field.set(dialog, false);
+									} catch (Exception e) {
+										e.printStackTrace();
+									}
+
+									return;
+								}
+
+								String strUnit = (String) sp1.getSelectedItem();
+								strWeight += strUnit;// 完整重量
+
+								UserInfo user = AccountUtil.getCurrentUser()
+										.getUserInfo();
+								UploadChargeStoreInfo ucs = new UploadChargeStoreInfo();
+								ucs.setActor(user.getUserName());
+								ucs.setActorDate(DateUtil
+										.parseDatetimeToJsonDate(c
+												.getCreateDate()));
+								ucs.setChargeCodes(c.getCodes());
+								ucs.setCorpId(user.getCorpId());
+
+								c.setWeight(strWeight);
+								ucs.setWeight(strWeight);
+								
+								if (isAutoStorage == 1 || c.getIsPackCode() == CodeTypeEnum.TrackCode.getId())
+									upload(c, adapter, 1);// 自动入库，交叉调用函数
+								else
+									inStock(c, ucs, adapter);
+							}
+
+						}).create();
+
+		detailDialog.show();
+
+	}
+
+	void upload(final Charges c, final Receive2MangermentAdapter adapter,
+			final int isAutoStorage) {
+		ChargeCodesDB db = new ChargeCodesDB(this);
+		List<ChargeCodes> ccList = db.getChargeCodes2(c.getId());// 获取单据下的所有扫码
+		if (ccList.size() == 0) {
+			Toaster.show(String.format("单据：%s下没有扫码,无法进行上传!", c.getBatchno()));
+			return;
+		}
+
+		if (TextUtils.isEmpty(c.getWeight())) {// 首次上传时重随便填写一个
+			c.setWeight("0");
+		}
+
+		if (c.getIsPackCode() == CodeTypeEnum.TrackCode.getId()) {
+			c.setIsAutoStorage(2);// 追溯码
+		} else {
+			c.setIsAutoStorage(isAutoStorage);// 收取码
+		}
+
+		UploadChargeCodesRequest uc = new UploadChargeCodesRequest();
+		uc.setSign(AccountUtil.getDefaultSign());
+		uc.setInfo(c);
+
+		final ChargesDB chargesDB = new ChargesDB(this);
+		RpcAsyncTask task = new RpcAsyncTask(this, uc,
+				new OnCompleteListener() {
+
+					@Override
+					public void onComplete(String content) {
+						UploadChargeCodesResponse uccr = null;
+						try {
+							uccr = UploadChargeCodesResponse
+									.fromJson(new JSONObject(content));
+						} catch (Exception ex) {
+							ex.printStackTrace();
+						}
+
+						if (uccr != null) {
+
+							if (uccr.isError()
+									&& uccr.getMessage().startsWith("WEIGHT:")) {
+								showWeight(c, adapter, isAutoStorage);
+								return;
+							} else if (uccr.isError()) {
+								Toaster.show(uccr.getMessage());
+								return;
+							}
+							// if(c.getState())
+
+							//===========自动入库或者追溯码的时候
+							if (isAutoStorage == 1 || c.getIsPackCode() == CodeTypeEnum.TrackCode.getId()) {
+								chargesDB.deleteCharges(c.getId());// 删除数据
+								adapter.RemoveItems(c);
+							} else {
+								chargesDB.modifyChangeState(c.getId(),
+										ChargesStatusEnum.Uploaded);// 修改上传状态
+								c.setState(ChargesStatusEnum.Uploaded
+										.getStateId());
+								adapter.updateItem(c);
+							}
+							Toaster.show("上传成功!");
+						}
+					}
+
+				});
+		TaskUtils
+				.execute(task, TaskUtils.POST, Constants.URL_UPLOADCHARGECODES);
+
+	}
+
+	void inStock(final Charges c, final UploadChargeStoreInfo ucs,
+			final Receive2MangermentAdapter adapter) {
+		UploadChargeStoreInfoRequest uc = new UploadChargeStoreInfoRequest();
+		uc.setSign(AccountUtil.getDefaultSign());
+		uc.setRequestInfo(ucs);
+
+		final ChargesDB chargesDB = new ChargesDB(this);
+		RpcAsyncTask task = new RpcAsyncTask(this, uc,
+				new OnCompleteListener() {
+
+					@Override
+					public void onComplete(String content) {
+						UploadChargeStoreInfoResponse usci = null;
+						try {
+							usci = UploadChargeStoreInfoResponse
+									.fromJson(new JSONObject(content));
+						} catch (Exception ex) {
+							ex.printStackTrace();
+						}
+
+						if (usci != null) {
+
+							if (usci.isError()
+									&& usci.getMessage().startsWith("WEIGHT:")) {
+								inStockWeigth(c, ucs, adapter);
+								return;
+							} else if (usci.isError()) {
+								Toaster.show(usci.getMessage());
+								return;
+							}
+
+							chargesDB.deleteCharges(c.getId());// 删除数据
+							adapter.RemoveItems(c);
+						}
+					}
+				});
+		TaskUtils.execute(task, TaskUtils.POST,
+				Constants.URL_UPLOADCHARGESTOREINFO);
+	}
+
+	void inStockWeigth(final Charges c, final UploadChargeStoreInfo ucs,
+			final Receive2MangermentAdapter adapter) {
 		LayoutInflater layoutInflater = LayoutInflater.from(this);
 		// ================选择计量单位布局
 		final View dialogView = layoutInflater.inflate(R.layout.dialog_weight,
@@ -342,230 +559,61 @@ public class Receive2MangermentActivity extends Activity implements
 
 								String strUnit = (String) sp1.getSelectedItem();
 								strWeight += strUnit;// 完整重量
-
-								UserInfo user = AccountUtil.getCurrentUser()
-										.getUserInfo();
-								UploadChargeStoreInfo ucs = new UploadChargeStoreInfo();
-								ucs.setActor(user.getUserName());
-								ucs.setActorDate(DateUtil
-										.parseDatetimeToJsonDate(c
-												.getCreateDate()));
-								ucs.setChargeCodes(c.getCodes());
-								ucs.setCorpId(user.getCorpId());
-
 								c.setWeight(strWeight);
 								ucs.setWeight(strWeight);
-								if (isAutoStorage == 1)
-									upload(c, adapter, 1);// 自动入库，交叉调用函数
-								else
-									inStock(c, ucs, adapter);
+								inStock(c, ucs, adapter);// 交差調用
+
 							}
 
 						}).create();
 
 		detailDialog.show();
-
 	}
 
-	void upload(final Charges c, final Receive2MangermentAdapter adapter,
-			final int isAutoStorage) {
-		// if(c.getState() == ChargesStatusEnum.Uploaded.getStateId()){
-		// Toaster.show(String.format("单据:%s已经上传",c.getBatchno()));
-		// return;
-		// }
-		ChargeCodesDB db = new ChargeCodesDB(this);
-		List<ChargeCodes> ccList = db.getChargeCodes2(c.getId());// 获取单据下的所有扫码
-		if (ccList.size() == 0) {
-			Toaster.show(String.format("单据：%s下没有扫码,无法进行上传!", c.getBatchno()));
-			return;
-		}
+	@Deprecated
+	void showWarehouse(Charges c, final Receive2MangermentAdapter adapter) {
 
-		if (TextUtils.isEmpty(c.getWeight())) {// 首次上传时重随便填写一个
-			c.setWeight("0");
-		}
-
-		if (c.getIsPackCode() == CodeTypeEnum.TrackCode.getId()) {
-			c.setState(2);// 追溯码
-		} else {
-			c.setState(isAutoStorage);// 收取码
-		}
-
-		UploadChargeCodesRequest uc = new UploadChargeCodesRequest();
-		uc.setSign(AccountUtil.getDefaultSign());
-		uc.setInfo(c);
-
-		final ChargesDB chargesDB = new ChargesDB(this);
-		RpcAsyncTask task = new RpcAsyncTask(this, uc,
-				new OnCompleteListener() {
-
-					@Override
-					public void onComplete(String content) {
-						UploadChargeCodesResponse uccr = null;
-						try {
-							uccr = UploadChargeCodesResponse
-									.fromJson(new JSONObject(content));
-						} catch (Exception ex) {
-							ex.printStackTrace();
-						}
-
-						if (uccr != null) {
-							if (uccr.isError()
-									&& uccr.getMessage().startsWith("WEIGHT:")) {
-								showWeight(c, adapter, isAutoStorage);
-								return;
-							} else if (uccr.isError()) {
-								Toaster.show(uccr.getMessage());
-								return;
-							}
-
-							if (isAutoStorage == 1) {
-								chargesDB.deleteCharges(c.getId());// 删除数据
-								adapter.RemoveItems(c);
-							} else {
-								chargesDB.modifyChangeState(c.getId(),
-										ChargesStatusEnum.Uploaded);// 修改上传状态
-								c.setState(ChargesStatusEnum.Uploaded
-										.getStateId());
-								adapter.updateItem(c);
-							}
-							Toaster.show("上传成功!");
-						}
-					}
-
-				});
-		TaskUtils
-				.execute(task, TaskUtils.POST, Constants.URL_UPLOADCHARGECODES);
-	}
-
-	void inStock(final Charges c, UploadChargeStoreInfo ucs,
-			final Receive2MangermentAdapter adapter) {
-		UploadChargeStoreInfoRequest uc = new UploadChargeStoreInfoRequest();
-		uc.setSign(AccountUtil.getDefaultSign());
-		uc.setRequestInfo(ucs);
-
-		final ChargesDB chargesDB = new ChargesDB(this);
-		RpcAsyncTask task = new RpcAsyncTask(this, uc,
-				new OnCompleteListener() {
-
-					@Override
-					public void onComplete(String content) {
-						UploadChargeStoreInfoResponse usci = null;
-						try {
-							usci = UploadChargeStoreInfoResponse
-									.fromJson(new JSONObject(content));
-						} catch (Exception ex) {
-							ex.printStackTrace();
-						}
-
-						if (usci != null) {
-							if (usci.isError()) {
-								Toaster.show(usci.getMessage());
-								return;
-							}
-
-							chargesDB.deleteCharges(c.getId());// 删除数据
-							adapter.RemoveItems(c);
-						}
-					}
-				});
-		TaskUtils.execute(task, TaskUtils.POST,
-				Constants.URL_UPLOADCHARGESTOREINFO);
-	}
-
-	/**
-	 * 农产品入库（调用接口，保存到服务器端）
-	 * 
-	 * @param task
-	 * @param isShowWarehouse
-	 *            是否需要选择仓库
-	 * @param chargesList
-	 *            表单
-	 */
-	void showWarehouse(final boolean isShowWarehouse,
-			final List<Charges> chargesList,
-			final Receive2MangermentAdapter adapter) {
-		if (chargesList.size() == 0) {
-			Toaster.show("请先选择数据行!");
-			return;
-		}
-
-		LayoutInflater layoutInflater = LayoutInflater.from(this);
-		// ================选择计量单位布局
-		final View dialogView = layoutInflater.inflate(R.layout.dialog_weight,
-				null);
-
-		// ==============计量单位控件
-		final Spinner sp1 = (Spinner) dialogView.findViewById(R.id.spinnerUnit);
-		final String[] mItems = this.getResources().getStringArray(
-				R.array.unitList);
-		ArrayAdapter<String> unitsData = new ArrayAdapter<String>(this,
-				android.R.layout.simple_spinner_item, mItems);
-		sp1.setAdapter(unitsData);// 设置计量单位数据
-
-		// 仓库控件
-		final Spinner spwh = (Spinner) dialogView
-				.findViewById(R.id.spinnerWarehouse);
-		ViewUtil.bindWarehouse(this, spwh);
-
-		if (!isShowWarehouse) {// 如果点击界面上方的入库，用户不需要再选择仓库直接入库到自己所属公司。
-			LinearLayout whLayout = (LinearLayout) dialogView
-					.findViewById(R.id.layoutWh);
-			whLayout.setVisibility(View.GONE);
-		}
-
-		Dialog detailDialog = new AlertDialog.Builder(this)
-				.setTitle("入库称重")
-				.setView(dialogView)
-				.setPositiveButton(R.string.btn_ok_tip,
-						new DialogInterface.OnClickListener() {
-
-							@Override
-							public void onClick(DialogInterface dialog, int arg1) {
-
-								EditText editWeight = (EditText) dialogView
-										.findViewById(R.id.editWeight);
-								String strWeight = editWeight.getText()
-										.toString();
-								String strUnit = (String) sp1.getSelectedItem();
-								strWeight += strUnit;// 完整重量
-
-								UserInfo user = AccountUtil.getCurrentUser()
-										.getUserInfo();
-								Warehouse wh = (Warehouse) spwh
-										.getSelectedItem();
-
-								for (Charges c : chargesList) {
-
-									UploadChargeStoreInfo ucs = new UploadChargeStoreInfo();
-									ucs.setActor(user.getUserName());
-									ucs.setActorDate(DateUtil
-											.parseDatetimeToJsonDate(c
-													.getCreateDate()));
-									ucs.setChargeCodes(c.getCodes());
-
-									if (isShowWarehouse)// 按用户选择的仓库
-										ucs.setCorpId(wh.getCorpId());
-									else
-										// 直接入库到用户所公司的仓库
-										ucs.setCorpId(user.getCorpId());
-
-									c.setWeight(strWeight);
-									ucs.setWeight(strWeight);
-									inStock(c, ucs, adapter);
-								}
-
-							}
-
-						})
-				.setNegativeButton(R.string.cancel,
-						new DialogInterface.OnClickListener() {
-
-							@Override
-							public void onClick(DialogInterface dialog, int arg1) {
-								dialog.dismiss();
-							}
-
-						}).create();
-		detailDialog.show();
+		/*
+		 * if (chargesList.size() == 0) { Toaster.show("请先选择数据行!"); return; }
+		 * 
+		 * LayoutInflater layoutInflater = LayoutInflater.from(this); //
+		 * ================选择计量单位布局 final View dialogView =
+		 * layoutInflater.inflate(R.layout.dialog_weight, null);
+		 * 
+		 * // 仓库控件 final Spinner spwh = (Spinner) dialogView
+		 * .findViewById(R.id.spinnerWarehouse); ViewUtil.bindWarehouse(this,
+		 * spwh); LinearLayout ly2 = (LinearLayout)
+		 * dialogView.findViewById(R.id.ly2); ly2.setVisibility(View.GONE);
+		 * LinearLayout ly3 = (LinearLayout) dialogView.findViewById(R.id.ly3);
+		 * ly3.setVisibility(View.GONE);
+		 * 
+		 * Dialog detailDialog = new AlertDialog.Builder(this) .setTitle("入库称重")
+		 * .setView(dialogView) .setPositiveButton(R.string.btn_ok_tip, new
+		 * DialogInterface.OnClickListener() {
+		 * 
+		 * @Override public void onClick(DialogInterface dialog, int arg1) {
+		 * 
+		 * UserInfo user = AccountUtil.getCurrentUser() .getUserInfo();
+		 * Warehouse wh = (Warehouse) spwh .getSelectedItem();
+		 * 
+		 * for (Charges c : chargesList) {
+		 * 
+		 * UploadChargeStoreInfo ucs = new UploadChargeStoreInfo();
+		 * ucs.setActor(user.getUserName()); ucs.setActorDate(DateUtil
+		 * .parseDatetimeToJsonDate(c .getCreateDate()));
+		 * ucs.setChargeCodes(c.getCodes()); ucs.setCorpId(wh.getCorpId());
+		 * 
+		 * c.setWeight("0"); ucs.setWeight("0"); inStock(c, ucs, adapter); }
+		 * 
+		 * }
+		 * 
+		 * }) .setNegativeButton(R.string.cancel, new
+		 * DialogInterface.OnClickListener() {
+		 * 
+		 * @Override public void onClick(DialogInterface dialog, int arg1) {
+		 * dialog.dismiss(); }
+		 * 
+		 * }).create(); detailDialog.show();
+		 */
 	}
 }

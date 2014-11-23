@@ -15,6 +15,7 @@ import android.widget.Toast;
 import com.acctrue.tts.Constants;
 import com.acctrue.tts.R;
 import com.acctrue.tts.db.RelationCodesDB;
+import com.acctrue.tts.enums.CodeTypeEnum;
 import com.acctrue.tts.model.RelationCodes;
 import com.acctrue.tts.utils.Toaster;
 import com.acctrue.tts.utils.ViewUtil;
@@ -30,6 +31,7 @@ public class ProductWrapActivity extends Activity {
 	EditText trackEdit;
 	TextView trackCount;
 	RelationCodes model = null;
+	CodeTypeEnum codeType;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -88,7 +90,7 @@ public class ProductWrapActivity extends Activity {
 			}
 		}	
 			
-		
+		//扫描收取码
 		Button btnScan = (Button)findViewById(R.id.btnScan);
 		btnScan.setOnClickListener(new OnClickListener() {
 
@@ -97,6 +99,21 @@ public class ProductWrapActivity extends Activity {
 				Intent intent = new Intent();
 				intent.setClass(ProductWrapActivity.this, CaptureActivity.class);
 				startActivityForResult(intent,Constants.REQCODE_SCANNIN_GREQUEST_CODE);
+				codeType = CodeTypeEnum.ChargesCode;
+			}
+			
+		});
+		
+		//扫描追溯码
+		Button btnScan2 = (Button)findViewById(R.id.btnScan2);
+		btnScan2.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View view) {
+				Intent intent = new Intent();
+				intent.setClass(ProductWrapActivity.this, CaptureActivity.class);
+				startActivityForResult(intent,Constants.REQCODE_SCANNIN_GREQUEST_CODE);
+				codeType = CodeTypeEnum.TrackCode;
 			}
 			
 		});
@@ -130,9 +147,11 @@ public class ProductWrapActivity extends Activity {
 				}
 				
 				Toaster.show("保存成功");
+				
+				ProductWrapActivity.this.finish();
 
-				revEdit.setText("");
-				trackEdit.setText("");
+				//revEdit.setText("");
+				//trackEdit.setText("");
 			}
 		});
 		
@@ -172,7 +191,9 @@ public class ProductWrapActivity extends Activity {
 		//如果收取码为空，就添加到收取码中
 		//如果收取码不为空，就添加到追溯码
 		//trackCount
-		if(revEdit.getText().length() == 0){
+		
+		//if(revEdit.getText().length() == 0){
+		if(codeType == CodeTypeEnum.ChargesCode){
 			revEdit.setText(scanno);
 		}else{
 			trackEdit.setEnabled(true);

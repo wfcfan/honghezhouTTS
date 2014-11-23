@@ -101,11 +101,14 @@ public class FormMgrActivity extends Activity implements OnClickListener {
 			return;
 		}
 		
-		showWeight(list);//先弹出重窗口，然后再上传数据
+		for(Store s : list){
+			uploadData("", s);
+		}
+		//showWeight(list);//先弹出重窗口，然后再上传数据
 		//uploadData(list);
 	}
 	
-	private void showWeight(final List<Store> list){
+	private void showWeight(final Store store){
 		LayoutInflater layoutInflater = LayoutInflater.from(this);
 		//================选择计量单位布局
 		final View dialogView = layoutInflater.inflate(R.layout.dialog_weight, null);
@@ -133,7 +136,7 @@ public class FormMgrActivity extends Activity implements OnClickListener {
 				String strWeight = editWeight.getText().toString();
 				String strUnit = (String)sp1.getSelectedItem();
 				strWeight += strUnit;//完整重量
-				uploadData(strWeight, list);
+				uploadData(strWeight, store);//交差调用
 			}
 			
 		})
@@ -141,42 +144,46 @@ public class FormMgrActivity extends Activity implements OnClickListener {
 		detailDialog.show();
 	}
 
-	private void uploadData(String weigth,List<Store> list) {
+	private void uploadData(String weigth,final Store store) {
+		UploadStoreRequest request = new UploadStoreRequest();
+		request.setSign(AccountUtil.getDefaultSign());
+		store.setWeight(weigth);
+		request.setStore(store);
+		List<StoreCode> codes = db.getStoreCodes(store.getStoreId(), StoreCode.DELETE_FALSE);
+		request.setCodes(codes);
 
-		for(final Store store : list){
-			UploadStoreRequest request = new UploadStoreRequest();
-			request.setSign(AccountUtil.getDefaultSign());
-			store.setWeight(weigth);
-			request.setStore(store);
-			List<StoreCode> codes = db.getStoreCodes(store.getStoreId(), StoreCode.DELETE_FALSE);
-			request.setCodes(codes);
+		request.setRemoveCodes(db.getStoreCodes(store.getStoreId(), StoreCode.DELETE_TRUE));
+		Log.i("UploadStoreRequest", request.toJson());
+		RpcAsyncTask task = new RpcAsyncTask(this,request,new OnCompleteListener() {
 
-			request.setRemoveCodes(db.getStoreCodes(store.getStoreId(), StoreCode.DELETE_TRUE));
-			Log.i("UploadStoreRequest", request.toJson());
-			RpcAsyncTask task = new RpcAsyncTask(this,request,new OnCompleteListener() {
-
-				@Override
-				public void onComplete(String content) {
-					UploadStoreResponse response = null;
-					try{
-						response = UploadStoreResponse.fromJson(new JSONObject(content));
-					}catch(Exception ex){
-						ex.printStackTrace();
-					}
-					
-					if(response != null){
-						if(response.isError()){
-							Toaster.show(response.getMessage());
-							return;
-						}
-						// 刷新界面
-						delete(store.getStoreId());
-					}
+			@Override
+			public void onComplete(String content) {
+				UploadStoreResponse response = null;
+				try{
+					response = UploadStoreResponse.fromJson(new JSONObject(content));
+				}catch(Exception ex){
+					ex.printStackTrace();
 				}
 				
-			});
-			TaskUtils.execute(task, TaskUtils.POST,Constants.URL_UPLOADSTORE);
-		}
+				if(response != null){
+					
+					if (response.isError()
+							&& response.getMessage().startsWith("WEIGHT:")) {
+						showWeight(store);
+						return;
+					}
+					if(response.isError()){
+						Toaster.show(response.getMessage());
+						return;
+					}
+					Toaster.show("上传成功!");
+					// 刷新界面
+					delete(store.getStoreId());
+				}
+			}
+			
+		});
+		TaskUtils.execute(task, TaskUtils.POST,Constants.URL_UPLOADSTORE);
 	}
 
 	void delete() {

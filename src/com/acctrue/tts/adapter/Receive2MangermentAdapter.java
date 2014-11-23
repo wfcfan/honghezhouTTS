@@ -81,7 +81,8 @@ public class Receive2MangermentAdapter extends BaseAdapter {
 	}
 
 	public void RemoveItems(Charges c) {
-		datas.remove(c);
+		if (c != null && datas.contains(c))
+			datas.remove(c);
 		// 重建 mChecked
 		mChecked = new ArrayList<Boolean>();
 		for (int i = 0; i < datas.size(); i++) {

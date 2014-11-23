@@ -178,6 +178,7 @@ public class TrackNoMgntActivity extends Activity { //implements ModifyRelationC
 									Toaster.show(ret.getString("Message"));
 								}else{
 									deleteData(model.getId());
+									Toaster.show("上传成功!");
 								}
 							} catch (JSONException e) {
 								Toaster.show(e.getMessage());

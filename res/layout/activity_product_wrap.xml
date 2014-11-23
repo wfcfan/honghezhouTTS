@@ -5,51 +5,80 @@
     android:orientation="vertical" >
 
     <include layout="@layout/com_header" />
-    
-    <Button
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:gravity="left|center_vertical"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/receive_no_tip" />
+
+        <Button
             android:id="@+id/btnScan"
             style="@style/btnStyle2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
-            android:text="@string/scan_tip" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/receive_no_tip" />
+            android:paddingLeft="3dp"
+            android:paddingRight="3dp"
+            android:text="@string/pw_sm_hip1" />
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal" >
+
         <EditText
-	        android:id="@+id/edtRevNo"
-	        android:layout_width="0dp"
-	        android:layout_height="wrap_content"
-	        android:layout_weight="1"
-	        android:gravity="top"
-	        android:inputType="text" />
-        <TextView 
+            android:id="@+id/edtRevNo"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="top"
+            android:inputType="text" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:gravity="left|center_vertical"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/track_no_tip" />
+
+        <Button
+            android:id="@+id/btnScan2"
+            style="@style/btnStyle2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:paddingLeft="3dp"
+            android:paddingRight="3dp"
+            android:text="@string/pw_sm_hip2" />
+
+        <TextView
             android:id="@+id/trackCount"
             android:layout_width="30dp"
             android:layout_height="wrap_content"
-            android:text="@string/tip_zero"/>
-	</LinearLayout>
-    
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/track_no_tip" />
+            android:text="@string/tip_zero" />
+    </LinearLayout>
 
     <EditText
         android:id="@+id/edtTrackNo"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:gravity="top"
         android:enabled="false"
+        android:gravity="top"
         android:inputType="textMultiLine" />
 
     <LinearLayout

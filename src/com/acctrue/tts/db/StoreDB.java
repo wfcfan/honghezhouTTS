@@ -322,7 +322,7 @@ public class StoreDB {
 			list.add(sc);
 		}
 		c.close();
-		db.close();
+		//db.close();
 		return list;
 	}
 	

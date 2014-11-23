@@ -23,43 +23,55 @@ public class RpcAsyncTask extends AsyncTask<String, Integer, String> {
 	private final JsonRest model;
 	private final OnCompleteListener completeListener;
 	private final RPCBase rpc;
-	
-	public RpcAsyncTask(Context ctx, JsonRest model,OnCompleteListener completeListener){
+	private final boolean showProgressDialog;
+
+	public RpcAsyncTask(Context ctx, JsonRest model,
+			OnCompleteListener completeListener) {
+		this(ctx, model, completeListener, true);
+	}
+
+	public RpcAsyncTask(Context ctx, JsonRest model,
+			OnCompleteListener completeListener, boolean showProgressDialog) {
 		this.ctx = ctx;
 		this.model = model;
 		this.completeListener = completeListener;
 		rpc = new RPCBase(ctx);
-		
+		this.showProgressDialog = showProgressDialog;
+
 		progressDialog = new ProgressDialog(ctx);
-		this.init();
+		if (showProgressDialog) {
+			this.init();
+		}
 	}
-	
-	private void init(){
+
+	private void init() {
 		progressDialog.setTitle(R.string.tip_title);
-		progressDialog.setMessage(ctx.getResources().getString(R.string.data_loadding));
+		progressDialog.setMessage(ctx.getResources().getString(
+				R.string.data_loadding));
 		progressDialog.setCancelable(false);
-		progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);	
+		progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 	}
-	
-	private String doPost(String apiPath) throws Exception{
+
+	private String doPost(String apiPath) throws Exception {
 		StringEntity strContent = null;
 		String result = "";
 		try {
 			strContent = new StringEntity(model.toJson());
 			Log.i("RequestJSON", model.toJson());
-			strContent.setContentType(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
+			strContent.setContentType(new BasicHeader(HTTP.CONTENT_TYPE,
+					"application/json"));
 			result = rpc.execute(strContent, apiPath);
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
-		
+
 		return result;
 	}
-	
-	private String doGet(String apiPath)throws Exception{
+
+	private String doGet(String apiPath) throws Exception {
 		return rpc.executeGet(apiPath);
 	}
-	
+
 	@Override
 	protected String doInBackground(String... params) {
 		String result = "";
@@ -81,32 +93,34 @@ public class RpcAsyncTask extends AsyncTask<String, Integer, String> {
 
 	@Override
 	protected void onPreExecute() {
-		progressDialog.show();
+		if (showProgressDialog) {
+			progressDialog.show();
+		}
 
 		super.onPreExecute();
 	}
-	
+
 	@Override
 	protected void onPostExecute(String result) {
 		boolean success = false;
-		
-		progressDialog.dismiss();
-		
-		try{
-			if(result != null){
+		if (showProgressDialog) {
+			progressDialog.dismiss();
+		}
+
+		try {
+			if (result != null) {
 				completeListener.onComplete(result);
 				success = true;
 			}
-		}catch(Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
 			Toaster.show(e.getMessage());
 		}
-		
-		if(!success){
-			Toaster.show(R.string.data_failed,Toast.LENGTH_LONG);
+
+		if (!success) {
+			Toaster.show(R.string.data_failed, Toast.LENGTH_LONG);
 		}
 		super.onPostExecute(result);
 	}
 
-	
 }

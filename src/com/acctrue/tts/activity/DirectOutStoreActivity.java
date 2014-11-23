@@ -160,6 +160,7 @@ public class DirectOutStoreActivity extends Activity implements OnClickListener 
 		db.addStore(newStore);
 		intent.putExtra("order_id", newStore.getStoreId());
 		startActivity(intent);
+		finish();
 	}
 	
 	Store getDefaultStore(String storeNo,BizCorp corp){

@@ -42,11 +42,12 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
+                android:visibility="gone"
                 android:text="@string/btn_down_changku_tip" />
 
             <Button
                 android:id="@+id/btn_corp"
-                style="@style/btnDataList"
+                style="@style/btnDataList2"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
@@ -54,7 +55,7 @@
 
             <Button
                 android:id="@+id/btn_task"
-                style="@style/btnDataList"
+                style="@style/btnDataList2"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
@@ -62,7 +63,7 @@
             
             <Button
                 android:id="@+id/btn_uploadform1"
-                style="@style/btnDataList"
+                style="@style/btnDataList2"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
@@ -70,7 +71,7 @@
             
             <Button
                 android:id="@+id/btnVersion"
-                style="@style/btnDataList2"
+                style="@style/btnDataList"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
@@ -80,8 +81,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="left|bottom"
-                android:layout_marginTop="35dp"
-                android:layout_marginBottom="20dp"
+                android:layout_marginTop="45dp"
                 android:orientation="horizontal" >
 
                 <Button

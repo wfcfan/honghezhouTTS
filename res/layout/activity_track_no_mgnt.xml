@@ -24,6 +24,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:autoLink="web"
+            android:visibility="gone"
             android:text="@string/create_tip" />
 
         <Button
@@ -58,6 +59,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:layout_weight="1"
+            android:visibility="gone"
             android:text="@string/modify_tip" />
 
         <Button

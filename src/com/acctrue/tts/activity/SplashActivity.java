@@ -72,17 +72,13 @@ public class SplashActivity extends ActivityGroup {
 						
 						initLoginViews();
 					}
-				});
+				},false);
 				
 				TaskUtils.execute(task, TaskUtils.POST,Constants.URL_UPDATE_VERSION);
 				
 			}
 
 		}, 2000);
-		
-		TextView txtVer = (TextView)findViewById(R.id.txtVer);
-		String info  = "30天试用版      " + GlobalApplication.currentVersion;
-		txtVer.setText(info);
 	}
 
 	private void initLoginViews() {

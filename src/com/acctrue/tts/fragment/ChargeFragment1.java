@@ -106,8 +106,9 @@ public class ChargeFragment1 extends Fragment implements OnClickListener {
 				productDB.getProducts());
 		spinnerProd.setAdapter(prodData);
 
-		bt = (EditText) root.findViewById(R.id.editText1);
-		bt.setText(getSerialNumber());
+		//--------禁用批号
+		//bt = (EditText) root.findViewById(R.id.editText1);
+		//bt.setText(getSerialNumber());
 		
 		
 		TextView dtView = (TextView) root.findViewById(R.id.txt_shouquRQ);
@@ -137,9 +138,10 @@ public class ChargeFragment1 extends Fragment implements OnClickListener {
 	}
 	
 	void bindFarmLands(String id){
-		List<FarmLands> fs = farmLandsDB.getFarmLandsList(id);
-		BaseAdapter farmLandsData = new FarmLandsArrayAdapter(getActivity(), fs);
-		spinnerFarm.setAdapter(farmLandsData);
+		spinnerFarm.setEnabled(false);
+//		List<FarmLands> fs = farmLandsDB.getFarmLandsList(id);
+//		BaseAdapter farmLandsData = new FarmLandsArrayAdapter(getActivity(), fs);
+//		spinnerFarm.setAdapter(farmLandsData);
 	}
 	
 	String getSerialNumber() {

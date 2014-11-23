@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
-    
+
     <include layout="@layout/com_header" />
 
     <TextView
@@ -17,57 +17,65 @@
 
         <EditText
             android:id="@+id/editOrderNo"
-            android:inputType="text"
             android:layout_width="0dp"
-            android:enabled="false"
             android:layout_height="wrap_content"
-            android:layout_weight="1">
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_weight="1"
+            android:enabled="false"
+            android:inputType="text" >
         </EditText>
-        
+
         <Button
             android:id="@+id/btnGen"
-            style="@style/btnStyle"
-            android:text="@string/shengchen_tip" 
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-    </LinearLayout>
-    
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/form_OrderType" />
-    <Spinner
-            android:id="@+id/lstStoreType"
+            style="@style/btnStyle2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:spinnerMode="dropdown" />
+            android:layout_marginRight="5dp"
+            android:text="@string/shengchen_tip"
+            android:visibility="gone" />
+    </LinearLayout>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/relation_corp_tip" />
-    
+        android:text="@string/form_OrderType" />
+
+    <Spinner
+        android:id="@+id/lstStoreType"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:spinnerMode="dropdown" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/realtion_xycorp_tip" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
 
         <EditText
             android:id="@+id/editQueryCorp"
-            android:inputType="text"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            android:inputType="text" >
+
             <requestFocus />
         </EditText>
-        
+
         <Button
             android:id="@+id/btnQuery"
-            style="@style/btnStyle"
-            android:text="@string/query_tip" 
+            style="@style/btnStyle2"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:text="@string/query_tip" />
     </LinearLayout>
-    
+
     <ListView
         android:id="@+id/lstCorp"
         android:layout_width="match_parent"
@@ -76,7 +84,7 @@
         android:layout_weight="1"
         android:background="@drawable/list_border" >
     </ListView>
-    
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -91,7 +99,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/btn_magin_lr20"
             android:layout_weight="1"
-            android:text="@string/confirm_tip" />
+            android:text="@string/btn_save_tip" />
 
         <Button
             android:id="@+id/btnBack"

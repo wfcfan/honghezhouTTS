@@ -69,17 +69,17 @@ public class Receive2Repository extends Activity implements OnClickListener {
 		ViewUtil.bindWarehouse(this, spWh);
 
 		// 返回
-		findViewById(R.id.btnBack).setOnClickListener(this);
+		findViewById(R.id.btnBack1).setOnClickListener(this);
 		// 扫码
 		findViewById(R.id.btnScan).setOnClickListener(this);
 		// 确定
 		findViewById(R.id.btnSave).setOnClickListener(this);
 		// 入库
-		findViewById(R.id.btnRepo).setOnClickListener(this);
+		//findViewById(R.id.btnRepo).setOnClickListener(this);
 		// 删除
 		findViewById(R.id.btnDel).setOnClickListener(this);
 		// 添加
-		findViewById(R.id.btnAdd).setOnClickListener(this);
+		//findViewById(R.id.btnAdd).setOnClickListener(this);
 		
 		Intent intent = getIntent(); 
 		int wid = intent.getIntExtra("wid", 0);
@@ -108,7 +108,7 @@ public class Receive2Repository extends Activity implements OnClickListener {
 	@Override
 	public void onClick(View view) {
 		switch (view.getId()) {
-		case R.id.btnBack:
+		case R.id.btnBack1:
 			finish();
 			break;
 		case R.id.btnScan:
@@ -118,14 +118,14 @@ public class Receive2Repository extends Activity implements OnClickListener {
 					Constants.REQCODE_SCANNIN_GREQUEST_CODE);
 			break;
 		case R.id.btnAdd:
-			addCode(etCode.getText().toString());
-			etCode.setText("");
+			//addCode(etCode.getText().toString());
+			//etCode.setText("");
 			break;
 		case R.id.btnSave:
 			save2db();
 			break;
 		case R.id.btnRepo:
-			uploadData();
+			//uploadData();
 			break;
 		case R.id.btnDel:
 			delCode();

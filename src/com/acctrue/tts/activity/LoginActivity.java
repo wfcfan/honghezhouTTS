@@ -79,6 +79,10 @@ public class LoginActivity extends ActivityGroup implements OnClickListener {
 			}
 
 		});
+		
+		TextView txtVer = (TextView)findViewById(R.id.txtVer);
+		String info  = "30天试用版      " + GlobalApplication.currentVersion;
+		txtVer.setText(info);
 	}
 
 	boolean canClose = false;

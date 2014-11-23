@@ -69,16 +69,17 @@ public final class DownloadHelper {
 		_map.put(TASK_FARMLANDS, getFarmLandsTask());
 		_map.put(TASK_PRODUCT, getProductTask());
 		_map.put(TASK_BIZCORP, getBizCorpTask());
-		_map.put(TAKS_WAREHOUSE, getWarehouseTask());
+		//_map.put(TAKS_WAREHOUSE, getWarehouseTask());
 		_map.put(TASK_STORE, getStoreTask());
 		_map.put(TASK_STORETYPES, getStoreTypesTask());
 		
+		//==============一键下载列表
 		_map2.put(Constants.URL_GETFARMLANDS, getFarmLandsTask());
 		_map2.put(Constants.URL_GETPRODUCTBYPAGE, getProductTask());
 		_map2.put(Constants.URL_GETBIZCORPSPAGE, getBizCorpTask());
-		_map2.put(Constants.URL_GETWAREHOUSEBYPAGE, getWarehouseTask());
+		//_map2.put(Constants.URL_GETWAREHOUSEBYPAGE, getWarehouseTask());
 		_map2.put(Constants.URL_GETSTORETYPES, getStoreTypesTask());
-		
+		_map2.put(Constants.URL_DOWNLOADSTORES,getStoreTask());
 	}
 
 	public RpcAsyncTask getTask(String taskName) {
@@ -192,6 +193,7 @@ public final class DownloadHelper {
 		});
 	}
 
+	@SuppressWarnings("unused")
 	private RpcAsyncTask getWarehouseTask() {
 		GetWarehouseByPageRequest page = new GetWarehouseByPageRequest();
 		page.setSign(AccountUtil.getDefaultSign());

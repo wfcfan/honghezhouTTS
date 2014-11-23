@@ -2,11 +2,13 @@ package com.acctrue.tts.activity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.acctrue.tts.R;
 import com.acctrue.tts.adapter.StoreListAdapter;
@@ -50,7 +52,10 @@ public class EBusinessOutStoreActivity extends Activity {
 		});
 		
 		if(adptRev.getCount() == 0){
-			Toaster.show("暂无数据!");
+			TextView tvTip = (TextView)this.findViewById(R.id.txtTip);
+			tvTip.setText("  暂无电商订单数据，请确认电商平台已向您派单，并已执行数据下载->电商订单数据下载!!");
+			tvTip.setTextColor(Color.RED);
+			tvTip.setVisibility(View.VISIBLE);
 			return;
 		}
 	}
