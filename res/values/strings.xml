@@ -81,7 +81,7 @@
     <string name="confirm_tip">确定</string>
     <string name="orderinfo_tip">单据信息</string>
     <string name="delcodelist_tip">删除码列表</string>
-    <string name="code_count_tip">码数量</string>
+    <string name="code_count_tip">已扫描数量</string>
     <string name="by_same_level">按同级</string>
     <string name="warnning_do_scan">请先扫描条码</string>
     <string name="warnning_sel_edit">请选择收取码或追溯码</string>

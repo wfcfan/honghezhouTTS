@@ -39,7 +39,6 @@ import com.acctrue.tts.model.StoreItem;
 import com.acctrue.tts.rpc.OnCompleteListener;
 import com.acctrue.tts.rpc.RpcAsyncTask;
 import com.acctrue.tts.tasks.TaskUtils;
-import com.acctrue.tts.testdata.TestAPI;
 import com.acctrue.tts.utils.AccountUtil;
 import com.acctrue.tts.utils.DateUtil;
 import com.acctrue.tts.utils.Toaster;
@@ -101,8 +100,8 @@ public class OrderScanActivity extends FragmentActivity implements OnClickListen
 				.setContent(R.id.tab1));
 		mTabHost.addTab(mTabHost.newTabSpec("tab2").setIndicator(tabView1)
 				.setContent(R.id.tab2));
-		mTabHost.addTab(mTabHost.newTabSpec("tab3").setIndicator(tabView2)
-				.setContent(R.id.tab3));
+//		mTabHost.addTab(mTabHost.newTabSpec("tab3").setIndicator(tabView2)
+//				.setContent(R.id.tab3));
 	}
 
 	private void init(){
@@ -139,14 +138,14 @@ public class OrderScanActivity extends FragmentActivity implements OnClickListen
 		//初始化删除码列表
 		codeList =  db.getStoreCodes(storeId, StoreCode.DELETE_TRUE);
 		adptDelCode = new StockCodeListAdapter(this,codeList,true);
-		ListView delPackList = (ListView)findViewById(R.id.orderDelList);
-		delPackList.setAdapter(adptDelCode);
+//		ListView delPackList = (ListView)findViewById(R.id.orderDelList);
+//		delPackList.setAdapter(adptDelCode);
 		
 		setcodeCount();
 	}
 	
 	void setcodeCount(){
-		lblCount.setText(adptCode.getCount() + "/" + adptCode.getCount());
+		lblCount.setText(adptCode.getCount());
 	}
 	
 	static final int TYPE_ADD = 0;

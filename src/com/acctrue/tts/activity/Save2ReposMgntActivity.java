@@ -188,7 +188,7 @@ public class Save2ReposMgntActivity extends Activity {
 		TextView tv2 = (TextView) detailView.findViewById(R.id.textView2);
 		tv2.setTextColor(this.getResources().getColor(R.color.white));
 		tv2.setText(codes);
-		
+
 		Dialog detailDialog = new AlertDialog.Builder(this)
 				.setTitle("详情")
 				.setView(detailView)
@@ -203,8 +203,8 @@ public class Save2ReposMgntActivity extends Activity {
 						}).create();
 		detailDialog.show();
 	}
-	
-	void uploadData(){
+
+	void uploadData() {
 		StoreInAdapter adpt = (StoreInAdapter) lstReps.getAdapter();
 		final List<ChargeStoreIn> selData = adpt.getCheckedData();
 
@@ -212,7 +212,7 @@ public class Save2ReposMgntActivity extends Activity {
 			Toaster.show("请先选择数据项!");
 			return;
 		}
-		
+
 		for (ChargeStoreIn us : selData) {
 			uploadData("", us);// 上传数据到接口
 		}
@@ -295,16 +295,17 @@ public class Save2ReposMgntActivity extends Activity {
 						}
 
 						if (response != null) {
-							
+
 							if (response.isError()
-									&& response.getMessage().startsWith("WEIGHT:")) {
+									&& response.getMessage().startsWith(
+											"WEIGHT:")) {
 								uploadData(us);
 								return;
 							} else if (response.isError()) {
 								Toaster.show(response.getMessage());
 								return;
 							}
-							
+
 							db.delChargeStoreIn(us.getId());
 							StoreInAdapter sa = (StoreInAdapter) lstReps
 									.getAdapter();
@@ -326,20 +327,43 @@ public class Save2ReposMgntActivity extends Activity {
 
 	private void deleteData() {
 		ListView lstReps = (ListView) findViewById(R.id.lstReps);
-		StoreInAdapter adpt = (StoreInAdapter) lstReps.getAdapter();
-		List<ChargeStoreIn> delData = adpt.getCheckedData();
+		final StoreInAdapter adpt = (StoreInAdapter) lstReps.getAdapter();
+		final List<ChargeStoreIn> delData = adpt.getCheckedData();
 
 		if (delData.size() == 0) {
 			Toaster.show("请先选择数据项!");
 			return;
 		}
 
-		// 删除数据库中的数据
-		ChargeStoreInDB db = new ChargeStoreInDB(this);
-		db.delChargeStoreIn(delData);
+		Dialog detailDialog = new AlertDialog.Builder(this)
+				.setTitle("确认删除？")
+				.setPositiveButton(R.string.btn_ok_tip,
+						new DialogInterface.OnClickListener() {
 
-		// 刷新界面
-		adpt.RemoveItems(delData);
+							@Override
+							public void onClick(DialogInterface arg0, int arg1) {
+								// 删除数据库中的数据
+								ChargeStoreInDB db = new ChargeStoreInDB(
+										Save2ReposMgntActivity.this);
+								db.delChargeStoreIn(delData);
+
+								// 刷新界面
+								adpt.RemoveItems(delData);
+								Toaster.show("删除成功!");
+							}
+
+						})
+				.setNegativeButton(R.string.cancel,
+						new DialogInterface.OnClickListener() {
+
+							@Override
+							public void onClick(DialogInterface dialog,
+									int which) {
+								dialog.dismiss();
+
+							}
+						}).create();
+		detailDialog.show();
 
 	}
 }

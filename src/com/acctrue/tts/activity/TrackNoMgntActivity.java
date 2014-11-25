@@ -8,7 +8,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -39,25 +42,26 @@ import com.acctrue.tts.utils.ViewUtil;
  * @author peng
  * 
  */
-public class TrackNoMgntActivity extends Activity { //implements ModifyRelationCode {
+public class TrackNoMgntActivity extends Activity { // implements
+													// ModifyRelationCode {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.activity_track_no_mgnt);
-		
+
 		ViewUtil.initHeader(this, "转装上传");
 	}
-	
+
 	private void init() {
-		CheckBox chkAll = (CheckBox)findViewById(R.id.chkSelAll);
+		CheckBox chkAll = (CheckBox) findViewById(R.id.chkSelAll);
 		chkAll.setChecked(false);
 		// 初始化下拉列表
 		ListView lstReps = (ListView) findViewById(R.id.lstReps);
 		RelationCodesDB db = new RelationCodesDB(this);
 		TrackAndRevAdapter adptRev = new TrackAndRevAdapter(this,
-				db.getAllRelationCodes(),chkAll);
+				db.getAllRelationCodes(), chkAll);
 
 		lstReps.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
 		lstReps.setAdapter(adptRev);
@@ -80,17 +84,19 @@ public class TrackNoMgntActivity extends Activity { //implements ModifyRelationC
 			@Override
 			public void onClick(View v) {
 				ListView lstReps = (ListView) findViewById(R.id.lstReps);
-				TrackAndRevAdapter adpt = (TrackAndRevAdapter) lstReps.getAdapter();
+				TrackAndRevAdapter adpt = (TrackAndRevAdapter) lstReps
+						.getAdapter();
 				List<RelationCodes> delData = adpt.getCheckedData();
-				
-				if (delData.size() == 0){
-					Toaster.show(getResources().getString(R.string.warnning_sel_data));
+
+				if (delData.size() == 0) {
+					Toaster.show(getResources().getString(
+							R.string.warnning_sel_data));
 					return;
 				}
-				
-				//调用接口
+
+				// 调用接口
 				uploadCode(delData);
-				
+
 			}
 		});
 
@@ -130,13 +136,15 @@ public class TrackNoMgntActivity extends Activity { //implements ModifyRelationC
 							Toast.LENGTH_LONG).show();
 					return;
 				}
-				
-				Intent intent = new Intent(TrackNoMgntActivity.this,ProductWrapActivity.class);
+
+				Intent intent = new Intent(TrackNoMgntActivity.this,
+						ProductWrapActivity.class);
 				intent.putExtra("chargeCode", chkList.get(0).getSqCode());
 				startActivity(intent);
 
-				//RelationCodeDialog dlg = new RelationCodeDialog(chkList.get(0));
-				//dlg.show(getFragmentManager(), "PROMPT_DIALOG_TAG");
+				// RelationCodeDialog dlg = new
+				// RelationCodeDialog(chkList.get(0));
+				// dlg.show(getFragmentManager(), "PROMPT_DIALOG_TAG");
 			}
 		});
 
@@ -148,81 +156,108 @@ public class TrackNoMgntActivity extends Activity { //implements ModifyRelationC
 
 		init();
 	}
-	
-	private void uploadCode(List<RelationCodes> delData){
+
+	private void uploadCode(List<RelationCodes> delData) {
 		List<JsonRest> jsonDatas = new ArrayList<JsonRest>();
-		//Map<String,List<RelationCodes>> splitMap = new HashMap<String,List<RelationCodes>>();
-		for(RelationCodes item : delData){
+		// Map<String,List<RelationCodes>> splitMap = new
+		// HashMap<String,List<RelationCodes>>();
+		for (RelationCodes item : delData) {
 			jsonDatas.add(new RelationCodesRequest(item));
 		}
-		
+
 		Iterator<JsonRest> ite = jsonDatas.iterator();
-		while(ite.hasNext()){
-			final RelationCodesRequest model = (RelationCodesRequest)ite.next();
-			//jsonDatas.add(new RelationCodesRequest(ite.next()));
-			RpcAsyncTask task = new RpcAsyncTask(this,model,
+		while (ite.hasNext()) {
+			final RelationCodesRequest model = (RelationCodesRequest) ite
+					.next();
+			// jsonDatas.add(new RelationCodesRequest(ite.next()));
+			RpcAsyncTask task = new RpcAsyncTask(this, model,
 					new OnCompleteListener() {
-						
+
 						@Override
 						public void onComplete(String content) {
 							try {
 								boolean fail = true;
 								JSONObject ret = null;
-								if(content != null){
+								if (content != null) {
 									ret = new JSONObject(content);
 									fail = ret.getBoolean("IsError");
-									
+
 								}
-								
-								if(content == null || fail){
+
+								if (content == null || fail) {
 									Toaster.show(ret.getString("Message"));
-								}else{
+								} else {
 									deleteData(model.getId());
 									Toaster.show("上传成功!");
 								}
 							} catch (JSONException e) {
 								Toaster.show(e.getMessage());
 							}
-							
+
 						}
 					});
-			TaskUtils.execute(task, "post","/rest/UploadRelation");
+			TaskUtils.execute(task, "post", "/rest/UploadRelation");
 		}
 	}
 
 	private void deleteData() {
 		ListView lstReps = (ListView) findViewById(R.id.lstReps);
-		TrackAndRevAdapter adpt = (TrackAndRevAdapter) lstReps.getAdapter();
-		List<RelationCodes> delData = adpt.getCheckedData();
-		
-		if (delData.size() == 0){
+		final TrackAndRevAdapter adpt = (TrackAndRevAdapter) lstReps
+				.getAdapter();
+		final List<RelationCodes> delData = adpt.getCheckedData();
+
+		if (delData.size() == 0) {
 			Toaster.show(getResources().getString(R.string.warnning_sel_data));
 			return;
 		}
 
-		// 删除数据库中的数据
-		RelationCodesDB db = new RelationCodesDB(this);
-		db.deleteRelationCodes(delData);
+		Dialog detailDialog = new AlertDialog.Builder(this)
+				.setTitle("确认删除？")
+				.setPositiveButton(R.string.btn_ok_tip,
+						new DialogInterface.OnClickListener() {
 
-		// 刷新界面
-		adpt.RemoveItems(delData);
+							@Override
+							public void onClick(DialogInterface arg0, int arg1) {
+								// 删除数据库中的数据
+								RelationCodesDB db = new RelationCodesDB(
+										TrackNoMgntActivity.this);
+								db.deleteRelationCodes(delData);
+
+								// 刷新界面
+								adpt.RemoveItems(delData);
+
+								Toaster.show("删除成功!");
+							}
+
+						})
+				.setNegativeButton(R.string.cancel,
+						new DialogInterface.OnClickListener() {
+
+							@Override
+							public void onClick(DialogInterface dialog,
+									int which) {
+								dialog.dismiss();
+
+							}
+						}).create();
+		detailDialog.show();
 
 	}
-	
+
 	private void deleteData(String id) {
 		ListView lstReps = (ListView) findViewById(R.id.lstReps);
 		TrackAndRevAdapter adpt = (TrackAndRevAdapter) lstReps.getAdapter();
 		int count = adpt.getCount();
 		RelationCodes item = null;
-		for(int i=0;i<count;i++){
-			item = (RelationCodes)adpt.getItem(i);
-			if(item.getId().equals(id))
+		for (int i = 0; i < count; i++) {
+			item = (RelationCodes) adpt.getItem(i);
+			if (item.getId().equals(id))
 				break;
 			item = null;
 		}
-		if(item == null)
+		if (item == null)
 			return;
-		
+
 		// 删除数据库中的数据
 		List<RelationCodes> tmpList = new ArrayList<RelationCodes>();
 		tmpList.add(item);
@@ -234,17 +269,17 @@ public class TrackNoMgntActivity extends Activity { //implements ModifyRelationC
 
 	}
 
-//	@Override
-//	public void doModify(RelationCodes data) {
-//		// 修改并更新数据
-//		RelationCodesDB db = new RelationCodesDB(this);
-//		db.updateRelationCodes(data);
-//
-//		ListView lstReps = (ListView) findViewById(R.id.lstReps);
-//		TrackAndRevAdapter adpt = (TrackAndRevAdapter) lstReps.getAdapter();
-//		adpt.updateItem(data);
-//		
-//	}
+	// @Override
+	// public void doModify(RelationCodes data) {
+	// // 修改并更新数据
+	// RelationCodesDB db = new RelationCodesDB(this);
+	// db.updateRelationCodes(data);
+	//
+	// ListView lstReps = (ListView) findViewById(R.id.lstReps);
+	// TrackAndRevAdapter adpt = (TrackAndRevAdapter) lstReps.getAdapter();
+	// adpt.updateItem(data);
+	//
+	// }
 }
 
 class TrackAndRevAdapter extends BaseAdapter {
@@ -299,28 +334,28 @@ class TrackAndRevAdapter extends BaseAdapter {
 		chkAll.setChecked(false);
 		notifyDataSetChanged();
 	}
-	
+
 	public void RemoveItem(RelationCodes item) {
 		// 删除datas对应的数据,
 		int index = -1;
 		for (int i = 0; i < datas.size(); i++) {
-			if(datas.get(i).getId().equals(item.getId())){
+			if (datas.get(i).getId().equals(item.getId())) {
 				index = i;
 				break;
 			}
 		}
-		if(index == -1)
+		if (index == -1)
 			return;
-		
+
 		datas.remove(index);
 		mChecked.remove(index);
-		
+
 		boolean all = true;
-		if(mChecked.size() == 0){
+		if (mChecked.size() == 0) {
 			all = false;
-		}else{
-			for(int i=0;i<mChecked.size();i++){
-				if(!mChecked.get(i)){
+		} else {
+			for (int i = 0; i < mChecked.size(); i++) {
+				if (!mChecked.get(i)) {
 					all = false;
 					break;
 				}

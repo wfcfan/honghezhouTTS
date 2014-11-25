@@ -11,7 +11,6 @@ import org.json.JSONObject;
 import android.content.Context;
 
 import com.acctrue.tts.Constants;
-import com.acctrue.tts.R;
 import com.acctrue.tts.db.BizCorpsDB;
 import com.acctrue.tts.db.FarmLandsDB;
 import com.acctrue.tts.db.ProductDB;
@@ -265,7 +264,7 @@ public final class DownloadHelper {
 						db.delStore(order);
 						db.addStoreBySelf(order);
 					}
-					Toaster.show(R.string.msg_download_success);
+					//Toaster.show(R.string.msg_download_success);
 				}
 				
 				Toaster.show("电商订单数据下载成功!");

@@ -136,7 +136,7 @@ public class DataDownloadActivity extends ActivityBase implements
 				}
 			}
 			Log.d(TAG, String.format("task count:%d", taskMap.size()));
-			break;
+			return;
 		}
 	}
 }
