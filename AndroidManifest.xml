@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.acctrue.tts"
     android:versionCode="21"
-    android:versionName="v1 release" >
+    android:versionName="v1.0 release" >
 
     <uses-sdk
         android:minSdkVersion="14"

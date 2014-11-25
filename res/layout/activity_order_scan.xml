@@ -35,7 +35,7 @@
                 android:text="@string/code_count_tip" />
 
             <TextView
-                android:id="@+id/lblCount"
+                android:id="@+id/lblScanCount"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
@@ -67,12 +67,15 @@
                 android:name="com.acctrue.tts.fragment.OrderCodeListFragment"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
+            
+            <!-- 
 
             <fragment
                 android:id="@+id/tab3"
                 android:name="com.acctrue.tts.fragment.OrderDelCodeListFragment"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
+           -->
         </FrameLayout>
 
         <LinearLayout
@@ -87,7 +90,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
-                android:text="@string/submit" />
+                android:text="@string/btn_save_tip" />
 
             <Button
                 android:id="@+id/btnback"
@@ -95,7 +98,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
-                android:text="@string/btn_save_tip" />
+                android:text="@string/back_tip" />
         </LinearLayout>
     </LinearLayout>
 

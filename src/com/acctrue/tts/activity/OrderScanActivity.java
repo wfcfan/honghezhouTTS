@@ -92,9 +92,9 @@ public class OrderScanActivity extends FragmentActivity implements OnClickListen
 		TextView tv1 = (TextView) tabView1.findViewById(R.id.tabLblTab);
 		tv1.setText(R.string.tab_fragment_tip2);
 		
-		View tabView2 = LayoutInflater.from(this).inflate(R.layout.com_tabmini,null);
-		TextView tv2 = (TextView) tabView2.findViewById(R.id.tabLblTab);
-		tv2.setText(R.string.delcodelist_tip);
+//		View tabView2 = LayoutInflater.from(this).inflate(R.layout.com_tabmini,null);
+//		TextView tv2 = (TextView) tabView2.findViewById(R.id.tabLblTab);
+//		tv2.setText(R.string.delcodelist_tip);
 
 		mTabHost.addTab(mTabHost.newTabSpec("tab1").setIndicator(tabView0)
 				.setContent(R.id.tab1));
@@ -106,7 +106,7 @@ public class OrderScanActivity extends FragmentActivity implements OnClickListen
 
 	private void init(){
 		//显示码数量
-		lblCount = (TextView)findViewById(R.id.lblCount);
+		lblCount = (TextView)findViewById(R.id.lblScanCount);
 		
 		//初始化单据信息
 		lblOrderInfo = (TextView)findViewById(R.id.lblOrderInfo);
@@ -145,7 +145,7 @@ public class OrderScanActivity extends FragmentActivity implements OnClickListen
 	}
 	
 	void setcodeCount(){
-		lblCount.setText(adptCode.getCount());
+		lblCount.setText(String.valueOf(adptCode.getCount()));
 	}
 	
 	static final int TYPE_ADD = 0;
@@ -237,7 +237,7 @@ public class OrderScanActivity extends FragmentActivity implements OnClickListen
 						db.deleteStoreCode(storeCode);
 						codeProgress(sr.getProductCode(), sr.getCurrentAmount(),TYPE_SUBTRACTION);
 						adptCode.RemoveItems(storeCode);//从码表中移除
-						adptDelCode.addData(storeCode);//添加到删除码表中
+						//adptDelCode.addData(storeCode);//添加到删除码表中
 					}
 				}
 				
@@ -258,7 +258,7 @@ public class OrderScanActivity extends FragmentActivity implements OnClickListen
 		
 		if(size > 0){
 			db.addStoreCode(adptCode.getAllData());//保存新增数据
-			db.addStoreCode(adptDelCode.getAllData());//保存删除数据的状态
+			//db.addStoreCode(adptDelCode.getAllData());//保存删除数据的状态
 			Toaster.show("保存成功");
 		}
 		finish();
