@@ -3,9 +3,6 @@ package com.acctrue.tts.activity;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,12 +12,9 @@ import android.widget.Button;
 
 import com.acctrue.tts.Constants;
 import com.acctrue.tts.R;
-import com.acctrue.tts.rpc.OnCompleteListener;
 import com.acctrue.tts.rpc.RpcAsyncTask;
 import com.acctrue.tts.tasks.DownloadHelper;
 import com.acctrue.tts.tasks.TaskUtils;
-import com.acctrue.tts.tasks.UpdateManager;
-import com.acctrue.tts.utils.Toaster;
 import com.acctrue.tts.utils.ViewUtil;
 
 /**
@@ -143,35 +137,6 @@ public class DataDownloadActivity extends ActivityBase implements
 			}
 			Log.d(TAG, String.format("task count:%d", taskMap.size()));
 			break;
-		case R.id.btnVersion:
-			RpcAsyncTask uptask = new RpcAsyncTask(this,null,
-					new OnCompleteListener() {
-						
-						@Override
-						public void onComplete(String content) {
-							try {
-								//生产环境将替换该接口返回值的判断逻辑
-								JSONObject json = new JSONObject(content);
-								boolean update = json.getBoolean("data");
-								if(update){
-									updateVersion();
-								}else{
-									Toaster.show("软件已经是最新版本");
-								}
-							} catch (JSONException e) {
-								e.printStackTrace();
-							}
-							
-							
-						}
-					});
-			TaskUtils.execute(uptask, TaskUtils.GET,Constants.URL_UPDATE);
 		}
 	}
-	
-	private void updateVersion(){
-		UpdateManager upManager = new UpdateManager(this,null);
-		upManager.checkUpdateInfo();
-	}
-
 }

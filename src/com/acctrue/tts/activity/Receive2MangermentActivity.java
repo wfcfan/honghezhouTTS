@@ -56,7 +56,7 @@ import com.acctrue.tts.utils.Toaster;
 import com.acctrue.tts.utils.ViewUtil;
 
 /**
- * 收取码管理
+ * 收取上传
  * 
  * @author wangfeng
  * 
@@ -73,7 +73,7 @@ public class Receive2MangermentActivity extends Activity implements
 		super.onCreate(savedInstanceState);
 		this.setContentView(R.layout.activity_receive2mgmt);
 
-		ViewUtil.initHeader(this, "收取码管理");
+		ViewUtil.initHeader(this, "收取上传");
 		db2 = new ChargeCodesDB(this);
 		this.init();
 	}
@@ -306,6 +306,11 @@ public class Receive2MangermentActivity extends Activity implements
 		}
 
 		for (Charges charges : chargesList) {
+			if(charges.getIsPackCode() == CodeTypeEnum.TrackCode.getId() && isAutoStorage == 1){
+				Toaster.show("追溯码无需入库!");
+				break;
+			}
+			
 			if (charges.getState() == ChargesChargesEnum.Uploaded.getStateId()) {
 				UserInfo user = AccountUtil.getCurrentUser().getUserInfo();
 				UploadChargeStoreInfo ucs = new UploadChargeStoreInfo();

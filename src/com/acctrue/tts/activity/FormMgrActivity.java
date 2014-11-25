@@ -36,6 +36,11 @@ import com.acctrue.tts.utils.AccountUtil;
 import com.acctrue.tts.utils.Toaster;
 import com.acctrue.tts.utils.ViewUtil;
 
+/**
+ * 出库上传
+ * @author wangfeng
+ *
+ */
 public class FormMgrActivity extends Activity implements OnClickListener {
 	DownTaskFormAdapter adptRev ;
 	private StoreDB db;
@@ -44,7 +49,7 @@ public class FormMgrActivity extends Activity implements OnClickListener {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_form_mgr);
-		ViewUtil.initHeader(this, "单据管理");
+		ViewUtil.initHeader(this, "出库上传");
 		db = new StoreDB(this);
 		init();
 	}

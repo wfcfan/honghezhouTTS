@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -14,6 +15,7 @@ import android.widget.TextView;
 
 import com.acctrue.tts.R;
 import com.acctrue.tts.model.Store;
+import com.acctrue.tts.utils.DateUtil;
 
 public class DownTaskFormAdapter extends BaseAdapter {
 	private Context ctx;
@@ -57,11 +59,11 @@ public class DownTaskFormAdapter extends BaseAdapter {
 
 		notifyDataSetChanged();
 	}
-	
+
 	public void RemoveItem(Store item) {
 		RemoveItem(item.getStoreId());
 	}
-	
+
 	public void RemoveItem(String storeId) {
 		// 删除datas对应的数据,
 		int index = -1;
@@ -79,16 +81,15 @@ public class DownTaskFormAdapter extends BaseAdapter {
 
 		notifyDataSetChanged();
 	}
-	
-	
-	public void replaceItems(List<Store> dataList){
+
+	public void replaceItems(List<Store> dataList) {
 		datas.clear();
 		datas.addAll(dataList);
 		mChecked = new ArrayList<Boolean>();
 		for (int i = 0; i < datas.size(); i++) {
 			mChecked.add(false);
 		}
-		
+
 		notifyDataSetChanged();
 	}
 
@@ -147,12 +148,22 @@ public class DownTaskFormAdapter extends BaseAdapter {
 		Store order = datas.get(position);
 
 		cache.checkBox.setChecked(mChecked.get(position));
-		cache.revno.setText(order.getStoreNo());
-		String secondCol = String.format("来往企业:%s...,%s",
-				order.getBizCorpName(), order.getStoreTypeText());
+		
+		cache.revno.setText(DateUtil.transDate(order.getStoreDate()));
+		String secondCol = subText(order.getBizCorpName());
 		cache.trackno.setText(secondCol);
 
 		return convertView;
+	}
+	
+
+	final String subText(String s) {
+		if (TextUtils.isEmpty(s))
+			return s;
+		if (s.length() >= 4)
+			return s;
+		else
+			return s.substring(0, 4) + "...";
 	}
 
 	private static class ItemViewCache {

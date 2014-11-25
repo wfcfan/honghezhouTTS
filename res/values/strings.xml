@@ -47,11 +47,11 @@
     <string name="clear_tip">清除</string>
     <string name="weight_tip">重量：</string>
     <string name="unit_tip">单位：</string>
-    <string name="btn_down_nonghu_tip">下载农户信息</string>
-    <string name="btn_down_shangpin_tip">下载商品信息</string>
+    <string name="btn_down_nonghu_tip">农户信息</string>
+    <string name="btn_down_shangpin_tip">农产品信息</string>
     <string name="btn_down_changku_tip">下载仓库信息</string>
-    <string name="btn_down_crop_tip">下载往来企业</string>
-    <string name="btn_down_task_tip">下载计划任务</string>
+    <string name="btn_down_crop_tip">下游客户信息</string>
+    <string name="btn_down_task_tip">电商订单数据</string>
     <string name="btn_down_form_tip">下载入出库单</string>
     <string name="btn_down_uploadform">上传入出库单</string>
     <string name="tab_fragment_tip1">基础数据</string>

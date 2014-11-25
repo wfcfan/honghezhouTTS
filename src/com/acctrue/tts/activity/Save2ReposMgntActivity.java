@@ -45,7 +45,7 @@ import com.acctrue.tts.utils.Toaster;
 import com.acctrue.tts.utils.ViewUtil;
 
 /**
- * 入库管理
+ * 入库上传
  * 
  * @author peng
  * 
@@ -63,7 +63,7 @@ public class Save2ReposMgntActivity extends Activity {
 		setContentView(R.layout.activity_2repo_mgnt);
 
 		db = new ChargeStoreInDB(this);
-		ViewUtil.initHeader(this, "入库管理");
+		ViewUtil.initHeader(this, "入库上传");
 		init();
 	}
 
@@ -203,8 +203,8 @@ public class Save2ReposMgntActivity extends Activity {
 						}).create();
 		detailDialog.show();
 	}
-
-	private void uploadData() {
+	
+	void uploadData(){
 		StoreInAdapter adpt = (StoreInAdapter) lstReps.getAdapter();
 		final List<ChargeStoreIn> selData = adpt.getCheckedData();
 
@@ -212,7 +212,13 @@ public class Save2ReposMgntActivity extends Activity {
 			Toaster.show("请先选择数据项!");
 			return;
 		}
+		
+		for (ChargeStoreIn us : selData) {
+			uploadData("", us);// 上传数据到接口
+		}
+	}
 
+	private void uploadData(final ChargeStoreIn us) {
 		LayoutInflater layoutInflater = LayoutInflater.from(this);
 		// ================选择计量单位布局
 		final View dialogView = layoutInflater.inflate(R.layout.dialog_weight,
@@ -245,9 +251,7 @@ public class Save2ReposMgntActivity extends Activity {
 										.toString();
 								String strUnit = (String) sp1.getSelectedItem();
 								strWeight += strUnit;// 完整重量
-								for (ChargeStoreIn us : selData) {
-									uploadData(strWeight, us);// 上传数据到接口
-								}
+								uploadData(strWeight, us);// 上传数据到接口,交叉调用
 							}
 
 						})
@@ -271,7 +275,7 @@ public class Save2ReposMgntActivity extends Activity {
 		UploadChargeStoreInfo ucs = new UploadChargeStoreInfo();
 		ucs.setActor(us.getActor());
 		ucs.setActorDate(DateUtil.parseDatetimeToJsonDate(us.getActDate()));
-		ucs.setCorpId(us.getWarehouseId());
+		ucs.setCorpId(AccountUtil.getCurrentUser().getUserInfo().getCorpId());
 		ucs.setChargeCodes(us.getCodesStr());
 		ucs.setWeight(weigth);
 		uc.setRequestInfo(ucs);
@@ -291,10 +295,16 @@ public class Save2ReposMgntActivity extends Activity {
 						}
 
 						if (response != null) {
-							if (response.isError()) {
+							
+							if (response.isError()
+									&& response.getMessage().startsWith("WEIGHT:")) {
+								uploadData(us);
+								return;
+							} else if (response.isError()) {
 								Toaster.show(response.getMessage());
 								return;
 							}
+							
 							db.delChargeStoreIn(us.getId());
 							StoreInAdapter sa = (StoreInAdapter) lstReps
 									.getAdapter();

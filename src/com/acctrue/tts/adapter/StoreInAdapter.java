@@ -124,6 +124,7 @@ public class StoreInAdapter extends BaseAdapter{
 		
 		cache.checkBox.setChecked(mChecked.get(position));
 		cache.desc.setText(datas.get(position).getWarehouseName());
+		cache.desc.setVisibility(View.GONE);
 		cache.time.setText(datas.get(position).getActDate());
 		
 		return convertView;

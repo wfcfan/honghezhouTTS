@@ -169,10 +169,8 @@ public class Receive2MangermentAdapter extends BaseAdapter {
 		}
 
 		cache.checkBox.setChecked(mChecked.get(position));
-		cache.revno.setText(charges.getBatchno());
-		String secondCol = String.format("农田编号:%s...,%s", charges.getManNo(),
-				charges.getStateName());
-		cache.trackno.setText(secondCol);
+		cache.revno.setText("农户:" + charges.getManName());
+		cache.trackno.setText("农产品:" + charges.getProductName());
 
 		return convertView;
 	}

@@ -115,7 +115,7 @@ public final class DownloadHelper {
 						db.deleteFarmLands(f.getFarmLandCode());
 						db.addFarmLands(f);
 					}
-					Toaster.show("农户农田数据下载成功!");
+					Toaster.show("农户信息下载成功!");
 				}
 			}
 		});
@@ -150,7 +150,7 @@ public final class DownloadHelper {
 					for (Product prd : gp.getProducts()) {
 						db.addProduct(prd);
 					}
-					Toaster.show("产品数据下载成功!");
+					Toaster.show("农产品信息下载成功!");
 				}
 			}
 		});
@@ -187,7 +187,7 @@ public final class DownloadHelper {
 					db.addCorp(corp);
 				}
 
-				Toaster.show("往来企业数据下载成功!");
+				Toaster.show("下游客户信息下载成功!");
 			}
 
 		});
@@ -268,7 +268,7 @@ public final class DownloadHelper {
 					Toaster.show(R.string.msg_download_success);
 				}
 				
-				Toaster.show("计划任务下载成功!");
+				Toaster.show("电商订单数据下载成功!");
 			}
 
 		});

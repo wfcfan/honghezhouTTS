@@ -34,7 +34,7 @@ import com.acctrue.tts.utils.Toaster;
 import com.acctrue.tts.utils.ViewUtil;
 
 /**
- * 追溯码管理
+ * 转装上传
  * 
  * @author peng
  * 
@@ -47,7 +47,7 @@ public class TrackNoMgntActivity extends Activity { //implements ModifyRelationC
 
 		setContentView(R.layout.activity_track_no_mgnt);
 		
-		ViewUtil.initHeader(this, "追溯码管理");
+		ViewUtil.initHeader(this, "转装上传");
 	}
 	
 	private void init() {

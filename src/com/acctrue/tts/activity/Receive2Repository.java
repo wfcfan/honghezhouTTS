@@ -40,7 +40,7 @@ import com.acctrue.tts.utils.Toaster;
 import com.acctrue.tts.utils.ViewUtil;
 
 /**
- * 收取入库
+ * 扫码入库
  * 
  * @author peng
  * 
@@ -58,7 +58,7 @@ public class Receive2Repository extends Activity implements OnClickListener {
 
 		setContentView(R.layout.activity_receive2repository);
 
-		ViewUtil.initHeader(this, "收取入库");
+		ViewUtil.initHeader(this, "扫码入库");
 		init();
 	}
 
@@ -95,7 +95,7 @@ public class Receive2Repository extends Activity implements OnClickListener {
 				codes.add(cic.getCode());
 			}
 		}
-		
+
 		ArrayAdapter<String> adptRev = new ArrayAdapter<String>(this,
 				android.R.layout.simple_list_item_checked, codes);
 		ctrlCodes = (ListView) findViewById(R.id.noList);
@@ -242,9 +242,9 @@ public class Receive2Repository extends Activity implements OnClickListener {
 		csi.setId(UUID.randomUUID().toString());
 		csi.setActDate(DateUtil.getDatetime());
 		csi.setActor(AccountUtil.getCurrentUser().getUserInfo().getUserName());
-		Warehouse wh = (Warehouse)spWh.getSelectedItem();
-		csi.setWarehouseId(wh.getWarehouseId());
-		csi.setWarehouseName(wh.getWarehouseName());
+//		Warehouse wh = (Warehouse)spWh.getSelectedItem();
+//		csi.setWarehouseId(wh.getWarehouseId());
+//		csi.setWarehouseName(wh.getWarehouseName());
 		
 		ChargeStoreInCode[] csArr = new ChargeStoreInCode[codes.size()];
 		for (int i = 0; i < codes.size(); i++) {

@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.KeyEvent;
 import android.view.View;
-import android.widget.TextView;
 
 import com.acctrue.tts.Constants;
 import com.acctrue.tts.GlobalApplication;
@@ -25,22 +24,22 @@ import com.acctrue.tts.utils.Toaster;
 
 /**
  * 闪屏
+ * 
  * @author wangfeng
- *
+ * 
  */
 @SuppressWarnings("deprecation")
 public class SplashActivity extends ActivityGroup {
-	
-	
+
 	@Override
 	public void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.splash);
 
-		if(SharedPreferencesUtils.getServerAddress() == ""){
+		if (SharedPreferencesUtils.getServerAddress() == "") {
 			SharedPreferencesUtils.setServerAddress(Constants.DEFAULT_HOST);
 		}
-		
+
 		Constants.URL_HOST = SharedPreferencesUtils.getServerAddress(true);
 
 		new Handler().postDelayed(new Runnable() {
@@ -54,28 +53,33 @@ public class SplashActivity extends ActivityGroup {
 				// return;
 				// }
 				VersionInfoRequest version = new VersionInfoRequest(
-													GlobalApplication.deviceId,
-													GlobalApplication.currentNum);
-				RpcAsyncTask task = new RpcAsyncTask(SplashActivity.this,version,new OnCompleteListener() {
-					@Override
-					public void onComplete(String content) {
-						VersionInfoResponse req;
-						try {
-							req = VersionInfoResponse.fromJson(new JSONObject(content));
-						} catch (JSONException e) {
-							req = null;
-						}
-						
-						if(req != null && !req.isError() && req.isUpdate()){
-							updateVersion(req.getUrl(),req.getUpdateContent());
-						}
-						
-						initLoginViews();
-					}
-				},false);
-				
-				TaskUtils.execute(task, TaskUtils.POST,Constants.URL_UPDATE_VERSION);
-				
+						GlobalApplication.deviceId,
+						GlobalApplication.currentNum);
+				RpcAsyncTask task = new RpcAsyncTask(SplashActivity.this,
+						version, new OnCompleteListener() {
+							@Override
+							public void onComplete(String content) {
+								VersionInfoResponse req;
+								try {
+									req = VersionInfoResponse
+											.fromJson(new JSONObject(content));
+								} catch (JSONException e) {
+									req = null;
+								}
+
+								if (req != null && !req.isError()
+										&& req.isUpdate()) {
+									updateVersion(req.getUrl(),
+											req.getUpdateContent());
+								}
+
+								initLoginViews();
+							}
+						}, false);
+
+				TaskUtils.execute(task, TaskUtils.POST,
+						Constants.URL_UPDATE_VERSION);
+
 			}
 
 		}, 2000);
@@ -86,7 +90,7 @@ public class SplashActivity extends ActivityGroup {
 		View loginView = this.getLocalActivityManager()
 				.startActivity(LoginActivity.class.getName(), intent)
 				.getDecorView();
-		
+
 		this.setContentView(loginView);
 	}
 
@@ -112,9 +116,9 @@ public class SplashActivity extends ActivityGroup {
 		}
 		return super.onKeyDown(keyCode, event);
 	}
-	
-	private void updateVersion(String url,String msg){
-		UpdateManager upManager = new UpdateManager(this,url);
+
+	private void updateVersion(String url, String msg) {
+		UpdateManager upManager = new UpdateManager(this, url);
 		upManager.setUpdateMsg(msg);
 		upManager.checkUpdateInfo();
 	}
