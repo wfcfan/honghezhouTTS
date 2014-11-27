@@ -15,7 +15,6 @@ import com.acctrue.tts.adapter.StoreListAdapter;
 import com.acctrue.tts.db.StoreDB;
 import com.acctrue.tts.enums.StoreSource;
 import com.acctrue.tts.model.Store;
-import com.acctrue.tts.utils.Toaster;
 import com.acctrue.tts.utils.ViewUtil;
 
 public class EBusinessOutStoreActivity extends Activity {

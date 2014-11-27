@@ -33,6 +33,7 @@ import com.acctrue.tts.utils.DateUtil;
 import com.acctrue.tts.utils.Toaster;
 import com.acctrue.tts.utils.ViewUtil;
 
+@Deprecated
 public class InStockHelper {
 	
 	final List<Charges> chargesList;

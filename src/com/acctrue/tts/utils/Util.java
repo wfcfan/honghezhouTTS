@@ -8,6 +8,7 @@ import org.apache.http.util.EntityUtils;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
@@ -39,6 +40,16 @@ public class Util {
 			return "暂无";
 		}
 		return s;
+	}
+	
+	public static String subStr(String str, int len) {
+		if (TextUtils.isEmpty(str))
+			return str;
+		if (str.length() <= len) {
+			return str;
+		} else {
+			return str.substring(0, len);
+		}
 	}
 	
 	private static String makeFragmentName(int viewId, int index) {

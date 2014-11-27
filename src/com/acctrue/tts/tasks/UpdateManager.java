@@ -6,9 +6,6 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-import com.acctrue.tts.R;
-import com.acctrue.tts.utils.Toaster;
-
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
@@ -22,6 +19,10 @@ import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.TextView;
+
+import com.acctrue.tts.R;
+import com.acctrue.tts.utils.Toaster;
 
 public class UpdateManager {
 	private Context ctx;
@@ -76,11 +77,19 @@ public class UpdateManager {
 	public void checkUpdateInfo() {
 		showNoticeDialog(); 
 	} 
+	
 	private void showNoticeDialog() {  
+		
+		LayoutInflater layoutInflater = LayoutInflater.from(ctx);
+		final View dialogView = layoutInflater.inflate(R.layout.update_dialog_view,null);
+		TextView tv = (TextView)dialogView.findViewById(R.id.updateContent);
+		tv.setText(updateMsg);
+		
 		android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(ctx);
 		// Builder，可以通过此builder设置改变AleartDialog的默认的主题样式及属性相关信息  
-		builder.setTitle("软件版本更新");  
-		builder.setMessage(updateMsg);  
+		builder.setTitle("软件版本更新");
+		builder.setView(dialogView);
+		//builder.setMessage(updateMsg);  
 		builder.setPositiveButton("下载", new OnClickListener() {   
 			@Override   
 			public void onClick(DialogInterface dialog, int which) {    

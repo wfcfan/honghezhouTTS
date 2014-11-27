@@ -362,17 +362,6 @@ public class Receive2MangermentActivity extends Activity implements
 
 								if (TextUtils.isEmpty(strWeight)) {
 									Toaster.show("重量不能为空!");
-
-									try {
-										Field field = dialog.getClass()
-												.getSuperclass()
-												.getDeclaredField("mShowing");
-										field.setAccessible(true);
-										field.set(dialog, false);
-									} catch (Exception e) {
-										e.printStackTrace();
-									}
-
 									return;
 								}
 
@@ -383,9 +372,7 @@ public class Receive2MangermentActivity extends Activity implements
 										.getUserInfo();
 								UploadChargeStoreInfo ucs = new UploadChargeStoreInfo();
 								ucs.setActor(user.getUserName());
-								ucs.setActorDate(DateUtil
-										.parseDatetimeToJsonDate(c
-												.getCreateDate()));
+								ucs.setActorDate(DateUtil.parseDatetimeToJsonDate(c.getCreateDate()));
 								ucs.setChargeCodes(c.getCodes());
 								ucs.setCorpId(user.getCorpId());
 

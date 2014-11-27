@@ -109,6 +109,7 @@
     <string name="form_corpName">开单企业名称：</string>
     <string name="form_bizCorpName">往来企业名称：</string>
     <string name="form_desc">描述：</string>
+    <string name="form_items">明细：</string>
     <string name="form_OrderType">单据类型：</string>
     <string name="form_OrderKind">单据类别：</string>
     <string name="form_OrderTypeText">单据类型：</string>
@@ -148,4 +149,5 @@
     
     <string name="pw_sm_hip1">收取码扫描</string>
     <string name="pw_sm_hip2">追溯码扫描</string>
+    <string name="pw_sm_hip3">已扫描数量:</string>
 </resources>

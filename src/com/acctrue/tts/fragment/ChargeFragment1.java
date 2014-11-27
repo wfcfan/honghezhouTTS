@@ -1,7 +1,5 @@
 package com.acctrue.tts.fragment;
 
-import java.util.List;
-
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
@@ -28,7 +26,6 @@ import com.acctrue.tts.db.ChargesDB;
 import com.acctrue.tts.db.FarmLandsDB;
 import com.acctrue.tts.db.ProductDB;
 import com.acctrue.tts.model.Charges;
-import com.acctrue.tts.model.FarmLands;
 import com.acctrue.tts.model.Farmers;
 import com.acctrue.tts.serial.SPEveryDaySerialNumber;
 import com.acctrue.tts.serial.SerialNumber;

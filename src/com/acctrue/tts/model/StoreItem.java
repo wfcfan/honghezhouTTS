@@ -1,6 +1,7 @@
 package com.acctrue.tts.model;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.UUID;
 
 import org.json.JSONObject;
@@ -114,6 +115,20 @@ public class StoreItem implements Serializable {
 
 	public void setDisplayProductUnit(String displayProductUnit) {
 		this.displayProductUnit = displayProductUnit;
+	}
+	
+	public static String toArrayString(List<StoreItem> list){
+		if(list != null && !list.isEmpty()){
+			String s = "";
+			for(StoreItem si : list)
+				s += si.productName+si.displayAmount+si.displayProductUnit+",";
+			
+			if(s.length()>0)
+				s = s.substring(0, s.length() - 1);
+			
+			return s;
+		}
+		return "";
 	}
 
 

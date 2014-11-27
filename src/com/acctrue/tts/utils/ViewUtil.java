@@ -78,15 +78,16 @@ public class ViewUtil {
 		
 		TextView lblUser = (TextView) activity.findViewById(R.id.lblUser);
 		UserInfo u = AccountUtil.getCurrentUser().getUserInfo();
-		lblUser.setText(u.getUserDisplayName());
+		String name = Util.subStr(u.getUserDisplayName(), 4);
+		lblUser.setText(name);
 		lblUser.setOnClickListener(backAct);
 
 		TextView lblTitle = (TextView) activity.findViewById(R.id.lblTitle);
 		lblTitle.setText(title);
 
 		TextView lblStatus = (TextView) activity.findViewById(R.id.lblStatus);
-		lblStatus.setText(NetworkUtil
-				.getNetworkStateString(activity));
+		lblStatus.setText(NetworkUtil.getNetworkStateString(activity));
 	}
+	
 
 }

@@ -26,6 +26,7 @@ import com.acctrue.tts.dto.DownloadStoresRequest;
 import com.acctrue.tts.dto.DownloadStoresResponse;
 import com.acctrue.tts.dto.LoginResponse;
 import com.acctrue.tts.model.Store;
+import com.acctrue.tts.model.StoreItem;
 import com.acctrue.tts.rpc.OnCompleteListener;
 import com.acctrue.tts.rpc.RpcAsyncTask;
 import com.acctrue.tts.tasks.DownloadHelper;
@@ -118,20 +119,23 @@ public class DownloadTaskFormActivity extends Activity implements OnClickListene
 		btnDown.setOnClickListener(this);
 	}
 	
-	final void showDetail(Store sotre){
+	final void showDetail(Store store){
 		LayoutInflater layoutInflater = LayoutInflater.from(this);
 		
 		final View detailView = layoutInflater.inflate(R.layout.orderinfo_detail_view, null);
 		
-		this.setViewText((TextView)detailView.findViewById(R.id.textView1), sotre.getStoreNo());
-		this.setViewText((TextView)detailView.findViewById(R.id.textView2), sotre.getStoreTypeText());
-		this.setViewText((TextView)detailView.findViewById(R.id.textView3), sotre.getStoreStatusText());
-		this.setViewText((TextView)detailView.findViewById(R.id.textView4), sotre.getStoreMan());
-		this.setViewText((TextView)detailView.findViewById(R.id.textView5), sotre.getStoreDateText());
-		this.setViewText((TextView)detailView.findViewById(R.id.textView6), sotre.getCorpName());
-		this.setViewText((TextView)detailView.findViewById(R.id.textView7), sotre.getBizCorpName());
-		this.setViewText((TextView)detailView.findViewById(R.id.textView8), sotre.getDescription());
-		this.setViewText((TextView)detailView.findViewById(R.id.textView9), sotre.getStoreKindText());
+		this.setViewText((TextView)detailView.findViewById(R.id.textView1), store.getStoreNo());
+		this.setViewText((TextView)detailView.findViewById(R.id.textView2), store.getStoreTypeText());
+		this.setViewText((TextView)detailView.findViewById(R.id.textView3), store.getStoreStatusText());
+		this.setViewText((TextView)detailView.findViewById(R.id.textView4), store.getStoreMan());
+		this.setViewText((TextView)detailView.findViewById(R.id.textView5), store.getStoreDateText());
+		this.setViewText((TextView)detailView.findViewById(R.id.textView6), store.getCorpName());
+		this.setViewText((TextView)detailView.findViewById(R.id.textView7), store.getDescription());
+		String ivs = StoreItem.toArrayString(store.getItem());
+		this.setViewText((TextView)detailView.findViewById(R.id.textView8), ivs);
+		//this.setViewText((TextView)detailView.findViewById(R.id.textView8), sotre.getDescription());
+		//this.setViewText((TextView)detailView.findViewById(R.id.textView9), sotre.getStoreKindText());
+		
 		Dialog detailDialog = new AlertDialog.Builder(this)
 		.setTitle("详情")
 		.setView(detailView)
