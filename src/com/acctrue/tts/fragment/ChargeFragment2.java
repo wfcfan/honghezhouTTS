@@ -55,7 +55,7 @@ public class ChargeFragment2 extends Fragment implements OnClickListener {
 		}
 		
 		// -----------生成测试数据
-		codesData.add("114000051339199");
+		//codesData.add("114000051339199");
 
 		adapter = new CodesAdapter(mAct, codesData);
 		// 初始化下拉列表
