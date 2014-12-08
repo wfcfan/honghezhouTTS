@@ -21,7 +21,10 @@ import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import com.acctrue.tts.Constants;
@@ -33,6 +36,7 @@ import com.acctrue.tts.rpc.OnCompleteListener;
 import com.acctrue.tts.rpc.RpcAsyncTask;
 import com.acctrue.tts.tasks.TaskUtils;
 import com.acctrue.tts.utils.AccountUtil;
+import com.acctrue.tts.utils.NetworkUtil;
 import com.acctrue.tts.utils.SharedPreferencesUtils;
 import com.acctrue.tts.utils.Toaster;
 
@@ -78,6 +82,14 @@ public class LoginActivity extends ActivityGroup implements OnClickListener {
 				return false;
 			}
 
+		});
+		
+		((Switch)findViewById(R.id.loginType)).setOnCheckedChangeListener(new OnCheckedChangeListener() {
+			
+			@Override
+			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+				NetworkUtil.setOffLine(isChecked);				
+			}
 		});
 		
 		TextView txtVer = (TextView)findViewById(R.id.txtVer);

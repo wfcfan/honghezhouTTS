@@ -41,6 +41,7 @@ import com.acctrue.tts.rpc.RpcAsyncTask;
 import com.acctrue.tts.tasks.TaskUtils;
 import com.acctrue.tts.utils.AccountUtil;
 import com.acctrue.tts.utils.DateUtil;
+import com.acctrue.tts.utils.NetworkUtil;
 import com.acctrue.tts.utils.Toaster;
 import com.acctrue.tts.utils.ViewUtil;
 
@@ -125,6 +126,11 @@ public class Save2ReposMgntActivity extends Activity {
 
 			@Override
 			public void onClick(View v) {
+				if(NetworkUtil.isOffLine()){
+					Toaster.show(R.string.offline_not_action);
+					return;
+				}
+				
 				uploadData();
 
 			}

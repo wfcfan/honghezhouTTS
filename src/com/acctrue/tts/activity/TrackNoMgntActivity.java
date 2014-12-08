@@ -33,6 +33,7 @@ import com.acctrue.tts.rpc.JsonRest;
 import com.acctrue.tts.rpc.OnCompleteListener;
 import com.acctrue.tts.rpc.RpcAsyncTask;
 import com.acctrue.tts.tasks.TaskUtils;
+import com.acctrue.tts.utils.NetworkUtil;
 import com.acctrue.tts.utils.Toaster;
 import com.acctrue.tts.utils.ViewUtil;
 
@@ -83,6 +84,11 @@ public class TrackNoMgntActivity extends Activity { // implements
 
 			@Override
 			public void onClick(View v) {
+				if(NetworkUtil.isOffLine()){
+					Toaster.show(R.string.offline_not_action);
+					return;
+				}
+				
 				ListView lstReps = (ListView) findViewById(R.id.lstReps);
 				TrackAndRevAdapter adpt = (TrackAndRevAdapter) lstReps
 						.getAdapter();

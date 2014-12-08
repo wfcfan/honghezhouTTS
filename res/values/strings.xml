@@ -146,6 +146,7 @@
     <string name="store_date_tip">单据日期:</string>
     
     <string name="login_type_off_hip">离线方式：</string>
+    <string name="offline_not_action">当前处于离线状态，无法进行此操作</string>
     
     <string name="pw_sm_hip1">收取码扫描</string>
     <string name="pw_sm_hip2">追溯码扫描</string>

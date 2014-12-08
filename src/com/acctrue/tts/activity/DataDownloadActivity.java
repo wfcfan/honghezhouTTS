@@ -15,6 +15,8 @@ import com.acctrue.tts.R;
 import com.acctrue.tts.rpc.RpcAsyncTask;
 import com.acctrue.tts.tasks.DownloadHelper;
 import com.acctrue.tts.tasks.TaskUtils;
+import com.acctrue.tts.utils.NetworkUtil;
+import com.acctrue.tts.utils.Toaster;
 import com.acctrue.tts.utils.ViewUtil;
 
 /**
@@ -80,6 +82,11 @@ public class DataDownloadActivity extends ActivityBase implements
 	@Override
 	public void onClick(View view) {
 		Intent intent = null;
+		
+		if(NetworkUtil.isOffLine()){
+			Toaster.show(R.string.offline_not_action);
+			return;
+		}
 
 		DownloadHelper helper = new DownloadHelper(this);
 		RpcAsyncTask task = null;

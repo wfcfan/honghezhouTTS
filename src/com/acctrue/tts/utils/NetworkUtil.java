@@ -12,6 +12,16 @@ import android.net.Uri;
 import android.text.TextUtils;
 
 public class NetworkUtil {
+	static boolean offline = false;
+	
+	public static boolean isOffLine(){
+		return offline;
+	}
+	
+	public static void setOffLine(boolean offLine){
+		offline = offLine;
+	}
+	
 	public class APNWrapper {
 		public String getApn() {
 			return apn;
@@ -106,6 +116,9 @@ public class NetworkUtil {
 	public static String getNetworkStateString(Context context){
 		NetworkState ns =  getNetworkState(context);
 		String strStatus = context.getString(R.string.networkstatus_offline);
+		if(offline){
+			return strStatus;
+		}
 		if(ns == NetworkState.MOBILE || ns == NetworkState.WIFI){
 			strStatus = context.getString(R.string.networkstatus_online);
 		}
