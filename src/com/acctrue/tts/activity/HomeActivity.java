@@ -75,10 +75,18 @@ public class HomeActivity extends Activity implements OnClickListener {
 						intent = new Intent(HomeActivity.this,TrackNoMgntActivity.class); 
 						break;
 					case Constants.E_BUSINESS_OUT: // ---------电商出库 
-						intent = new Intent(HomeActivity.this,EBusinessOutStoreActivity.class); 
+						if(NetworkUtil.isOffLine()){
+							Toaster.show(R.string.offline_not_action);
+						}else{
+							intent = new Intent(HomeActivity.this,EBusinessOutStoreActivity.class);
+						}
 						break;
 					case Constants.DIRECT_OUT_STORE: // ---------直接出库 
-						intent = new Intent(HomeActivity.this,DirectOutStoreActivity.class); 
+						if(NetworkUtil.isOffLine()){
+							Toaster.show(R.string.offline_not_action);
+						}else{
+							intent = new Intent(HomeActivity.this,DirectOutStoreActivity.class);
+						}
 						break;
 					case Constants.FROM_MGR://--------单据管理
 						intent = new Intent(HomeActivity.this,FormMgrActivity.class); 
