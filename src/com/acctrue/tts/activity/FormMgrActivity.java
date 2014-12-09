@@ -38,6 +38,7 @@ import com.acctrue.tts.rpc.OnCompleteListener;
 import com.acctrue.tts.rpc.RpcAsyncTask;
 import com.acctrue.tts.tasks.TaskUtils;
 import com.acctrue.tts.utils.AccountUtil;
+import com.acctrue.tts.utils.NetworkUtil;
 import com.acctrue.tts.utils.Toaster;
 import com.acctrue.tts.utils.ViewUtil;
 
@@ -149,6 +150,10 @@ public class FormMgrActivity extends Activity implements OnClickListener {
 	}
 
 	private void upload() {
+		if(NetworkUtil.isOffLine()){
+			Toaster.show(R.string.offline_not_action);
+			return;
+		}
 		List<Store> list = adptRev.getCheckedData();
 		if (list == null || list.size() == 0) {
 			Toaster.show(getResources().getString(

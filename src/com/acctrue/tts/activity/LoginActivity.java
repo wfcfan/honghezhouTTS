@@ -37,6 +37,7 @@ import com.acctrue.tts.rpc.RpcAsyncTask;
 import com.acctrue.tts.tasks.TaskUtils;
 import com.acctrue.tts.utils.AccountUtil;
 import com.acctrue.tts.utils.NetworkUtil;
+import com.acctrue.tts.utils.SIMCardInfo;
 import com.acctrue.tts.utils.SharedPreferencesUtils;
 import com.acctrue.tts.utils.Toaster;
 
@@ -121,6 +122,20 @@ public class LoginActivity extends ActivityGroup implements OnClickListener {
 	}
 
 	final void login() {
+		//如果是离线，则读取以手机号为文件的用户信息，如果读到，则表示存在，否则，为未注册用户
+		if(NetworkUtil.isOffLine()){
+			if(!AccountUtil.isRegister()){
+				Toaster.show(R.string.unregister_phoneno_login);
+				return;
+			}else{
+				AccountUtil.loadAccount();
+				Intent intent = new Intent(LoginActivity.this,
+						HomeActivity.class);
+				startActivity(intent);
+				finish();
+				return;
+			}
+		}
 		EditText userNameView = (EditText) this.findViewById(R.id.username);
 		String userNameValue = userNameView.getText().toString();
 		if (userNameValue.equals("")) {

@@ -12,10 +12,18 @@ import android.net.Uri;
 import android.text.TextUtils;
 
 public class NetworkUtil {
+	static SIMCardInfo simCardInfo;
 	static boolean offline = false;
 	
 	public static boolean isOffLine(){
 		return offline;
+	}
+	
+	public static SIMCardInfo SIMCardInfo(){
+		return simCardInfo;
+	}
+	public static void setSIMCardInfo(SIMCardInfo simCard){
+		simCardInfo = simCard;
 	}
 	
 	public static void setOffLine(boolean offLine){

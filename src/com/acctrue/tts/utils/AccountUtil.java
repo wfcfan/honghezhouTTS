@@ -14,12 +14,16 @@ import com.acctrue.tts.dto.Sign;
 
 public class AccountUtil {
 	public final static String TAG = AccountUtil.class.getSimpleName();
-	private final static String USER_FILE = Constants.PATH_ACCOUNT + "user.ser";
+	private static String USER_FILE = Constants.PATH_ACCOUNT + "user.ser";
 	private static LoginResponse user = null;
 
 	public static void clearCache() {
 		AccountUtil.user = null;
 		clearUserAccount();
+	}
+	
+	public static void setUserFilePath(String filePath){
+		USER_FILE = Constants.PATH_ACCOUNT + filePath + ".ser";
 	}
 
 	private static void clearUserAccount() {
@@ -55,6 +59,11 @@ public class AccountUtil {
 				}
 			}
 		}
+	}
+	
+	public static boolean isRegister(){
+		File file = new File(USER_FILE);
+		return file.exists();
 	}
 
 	public static void loadAccount() {

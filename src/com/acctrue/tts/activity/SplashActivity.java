@@ -19,6 +19,10 @@ import com.acctrue.tts.rpc.OnCompleteListener;
 import com.acctrue.tts.rpc.RpcAsyncTask;
 import com.acctrue.tts.tasks.TaskUtils;
 import com.acctrue.tts.tasks.UpdateManager;
+import com.acctrue.tts.utils.AccountUtil;
+import com.acctrue.tts.utils.NetworkUtil;
+import com.acctrue.tts.utils.NetworkUtil.NetworkState;
+import com.acctrue.tts.utils.SIMCardInfo;
 import com.acctrue.tts.utils.SharedPreferencesUtils;
 import com.acctrue.tts.utils.Toaster;
 
@@ -39,6 +43,10 @@ public class SplashActivity extends ActivityGroup {
 		if (SharedPreferencesUtils.getServerAddress() == "") {
 			SharedPreferencesUtils.setServerAddress(Constants.DEFAULT_HOST);
 		}
+		
+		//初始化sim卡信息
+		NetworkUtil.setSIMCardInfo(new SIMCardInfo(SplashActivity.this));
+		AccountUtil.setUserFilePath(NetworkUtil.SIMCardInfo().getNativePhoneNumber());
 
 		Constants.URL_HOST = SharedPreferencesUtils.getServerAddress(true);
 
@@ -46,40 +54,41 @@ public class SplashActivity extends ActivityGroup {
 
 			@Override
 			public void run() {
-				// if (NetworkUtil.getNetworkState(SplashActivity.this) ==
-				// NetworkUtil.NetworkState.NOTHING) {
-				// Toaster.show("手机不能连接到网络，请检查网络配置");
-				// finish();
-				// return;
-				// }
-				VersionInfoRequest version = new VersionInfoRequest(
-						GlobalApplication.deviceId,
-						GlobalApplication.currentNum);
-				RpcAsyncTask task = new RpcAsyncTask(SplashActivity.this,
-						version, new OnCompleteListener() {
-							@Override
-							public void onComplete(String content) {
-								VersionInfoResponse req;
-								try {
-									req = VersionInfoResponse
-											.fromJson(new JSONObject(content));
-								} catch (JSONException e) {
-									req = null;
+				NetworkState state = NetworkUtil.getNetworkState(SplashActivity.this);
+				if (state == NetworkUtil.NetworkState.NOTHING) {
+						 Toaster.show("手机不能连接到网络，请检查网络配置");
+						 finish();
+				}else if(state == NetworkUtil.NetworkState.WIFI){
+					VersionInfoRequest version = new VersionInfoRequest(
+							GlobalApplication.deviceId,
+							GlobalApplication.currentNum);
+					RpcAsyncTask task = new RpcAsyncTask(SplashActivity.this,
+							version, new OnCompleteListener() {
+								@Override
+								public void onComplete(String content) {
+									VersionInfoResponse req;
+									try {
+										req = VersionInfoResponse
+												.fromJson(new JSONObject(content));
+									} catch (JSONException e) {
+										req = null;
+									}
+
+									if (req != null && !req.isError()
+											&& req.isUpdate()) {
+										updateVersion(req.getUrl(),
+												req.getUpdateContent());
+									}
+
+									initLoginViews();
 								}
+							}, false);
 
-								if (req != null && !req.isError()
-										&& req.isUpdate()) {
-									updateVersion(req.getUrl(),
-											req.getUpdateContent());
-								}
-
-								initLoginViews();
-							}
-						}, false);
-
-				TaskUtils.execute(task, TaskUtils.POST,
-						Constants.URL_UPDATE_VERSION);
-
+					TaskUtils.execute(task, TaskUtils.POST,
+							Constants.URL_UPDATE_VERSION);
+				}else{
+					initLoginViews();
+				}
 			}
 
 		}, 2000);
