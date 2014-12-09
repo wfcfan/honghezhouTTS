@@ -144,16 +144,17 @@ public class FormMgrActivity extends Activity implements OnClickListener {
 			delete();
 			break;
 		case R.id.btn_upload:
+			if(!AccountUtil.isOnline()){
+				Toaster.show(R.string.offline_not_action);
+				return;
+			}
+			
 			upload();
 			break;
 		}
 	}
 
-	private void upload() {
-		if(NetworkUtil.isOffLine()){
-			Toaster.show(R.string.offline_not_action);
-			return;
-		}
+	private void upload() {		
 		List<Store> list = adptRev.getCheckedData();
 		if (list == null || list.size() == 0) {
 			Toaster.show(getResources().getString(

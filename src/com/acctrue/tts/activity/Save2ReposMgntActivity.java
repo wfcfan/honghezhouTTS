@@ -126,7 +126,7 @@ public class Save2ReposMgntActivity extends Activity {
 
 			@Override
 			public void onClick(View v) {
-				if(NetworkUtil.isOffLine()){
+				if(!AccountUtil.isOnline()){
 					Toaster.show(R.string.offline_not_action);
 					return;
 				}

@@ -27,6 +27,8 @@ public class HongHeZhouDB {
 	private static final String CREATE_TABLE_STORECODE = "create table if not exists StoreCode(Id text primary key,StoreId text,CodeId text,CodeCount integer,ParentId text,SavedCodeId text,ProductCode text,ProductName text,InnerPacking text,ProduceBatchNo text,ProductUnit text,CurrentAmount integer,CreateTime text,IsDelete integer)";
 	private static final String CREATE_TABLE_STORE = "create table if not exists Store(StoreId text primary key,StoreNo text,StoreType integer,StoreTypeText text,StoreStatus integer,StoreStatusText text,StoreKind integer,StoreMan text,StoreDate text,CorpId integer,CorpCode text,CorpName text,BizCorpId integer,BizCorpCode text,BizCorpName text,RecCorpId integer,RecCorpCode text,RecCorpName text,Description text,CreateTime text,source integer)";
 	private static final String CREATE_TABLE_STOREITEM = "create table if not exists StoreItem(ItemId text primary key,StoreId text,ProduceBatchNo text,ProductCode text,ProductName text,Amount integer,DisplayAmount integer,DisplayProductUnit text)";
+	private static final String CREATE_TABLE_USERINFO ="create table if not exists UserInfo(corpCode text,corpId integer,corpName text,corpType integer,userDisplayName text,userId integer,userName text,password text,createTime text)";
+	
 	
 	public HongHeZhouDB(Context ctx) {
 		db = ctx.openOrCreateDatabase(Constants.DATABASE_NAME, Constants.DATABASE_DEFAULT_VERSION, null);
@@ -48,6 +50,7 @@ public class HongHeZhouDB {
 		db.execSQL(CREATE_TABLE_STORE);
 		db.execSQL(CREATE_TABLE_STOREITEM);
 		db.execSQL(CREATE_TABLE_STORECODE);
+		db.execSQL(CREATE_TABLE_USERINFO);
 		
 		Log.d(TAG, "database is created!");
 		

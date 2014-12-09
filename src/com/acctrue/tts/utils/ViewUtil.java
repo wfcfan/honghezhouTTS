@@ -4,6 +4,7 @@ import java.util.List;
 
 import android.app.Activity;
 import android.content.Context;
+import android.telephony.TelephonyManager;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -54,14 +55,24 @@ public class ViewUtil {
 	
 	@SuppressWarnings("unchecked")
 	static public void setSpinnerItemSelectedById(Spinner spinner, String id) {
-		ArrayAdapter<String> adapter = (ArrayAdapter<String>) spinner
-				.getAdapter();
+		ArrayAdapter<String> adapter = (ArrayAdapter<String>) spinner.getAdapter();
+		
 		for (int i = 0; i < adapter.getCount(); i++) {
 			if (adapter.getItem(i).toString().equals(id)) {
 				spinner.setSelection(i, true);
 				break;
 			}
 		}
+	}
+	
+	/**
+	 * 获取当前机器的手机号码
+	 * @param c 当前上下文
+	 * @return 手机号
+	 */
+	public static String getMoibleNum(final Context c){
+		TelephonyManager tm = (TelephonyManager)c.getSystemService(Context.TELEPHONY_SERVICE);
+		return tm.getLine1Number();
 	}
 	
 	
@@ -78,7 +89,7 @@ public class ViewUtil {
 		
 		TextView lblUser = (TextView) activity.findViewById(R.id.lblUser);
 		UserInfo u = AccountUtil.getCurrentUser().getUserInfo();
-		String name = Util.subStr(u.getUserDisplayName(), 4);
+		String name = Util.subStr(u.getUserDisplayName(), Constants.STR_MAX_LENGTH);
 		lblUser.setText(name);
 		lblUser.setOnClickListener(backAct);
 

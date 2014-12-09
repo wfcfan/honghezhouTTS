@@ -79,6 +79,10 @@ public class AccountUtil {
 		return user;
 	}
 	
+	public static boolean isOnline(){
+		return getCurrentUser().isOnline();
+	}
+		
 	public static Sign getDefaultSign(){
 		Sign sign= null;
 		LoginResponse u = getCurrentUser();

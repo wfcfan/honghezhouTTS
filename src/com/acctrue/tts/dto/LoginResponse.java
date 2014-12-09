@@ -13,6 +13,7 @@ public class LoginResponse implements Serializable {
 	private String newToken;
 	private boolean updateToken;
 	private UserInfo userInfo;
+	private boolean online;
 
 	public String getErrorCode() {
 		return errorCode;
@@ -62,6 +63,14 @@ public class LoginResponse implements Serializable {
 		this.userInfo = userInfo;
 	}
 
+	public boolean isOnline() {
+		return online;
+	}
+
+	public void setOnline(boolean online) {
+		this.online = online;
+	}
+
 	public static class UserInfo implements Serializable {
 		private String corpCode;
 		private int corpId;
@@ -70,6 +79,7 @@ public class LoginResponse implements Serializable {
 		private String userDisplayName;
 		private int userId;
 		private String userName;
+		private String password;
 
 		public String getCorpCode() {
 			return corpCode;
@@ -127,12 +137,32 @@ public class LoginResponse implements Serializable {
 			this.userName = userName;
 		}
 
+		public String getPassword() {
+			return password;
+		}
+
+		public void setPassword(String password) {
+			this.password = password;
+		}
+
+	}
+
+	public static LoginResponse fromLocal(UserInfo userInfo) {
+		LoginResponse lr = new LoginResponse();
+		lr.errorCode = "";
+		lr.isError = false;
+		lr.newToken = "TestToken";
+		lr.updateToken = false;
+		lr.userInfo = userInfo;
+		lr.online = false;
+		return lr;
 	}
 
 	public static LoginResponse fromJson(JSONObject obj) {
 		LoginResponse lr = null;
 		try {
 			lr = new LoginResponse();
+			lr.online = true;
 			lr.errorCode = obj.getString("ErrorCode");
 			lr.isError = obj.getBoolean("IsError");
 			lr.message = obj.getString("Message");

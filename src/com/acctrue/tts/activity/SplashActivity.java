@@ -55,10 +55,7 @@ public class SplashActivity extends ActivityGroup {
 			@Override
 			public void run() {
 				NetworkState state = NetworkUtil.getNetworkState(SplashActivity.this);
-				if (state == NetworkUtil.NetworkState.NOTHING) {
-						 Toaster.show("手机不能连接到网络，请检查网络配置");
-						 finish();
-				}else if(state == NetworkUtil.NetworkState.WIFI){
+				if(state == NetworkUtil.NetworkState.WIFI){
 					VersionInfoRequest version = new VersionInfoRequest(
 							GlobalApplication.deviceId,
 							GlobalApplication.currentNum);
@@ -84,8 +81,8 @@ public class SplashActivity extends ActivityGroup {
 								}
 							}, false);
 
-					TaskUtils.execute(task, TaskUtils.POST,
-							Constants.URL_UPDATE_VERSION);
+					TaskUtils.execute(task, TaskUtils.POST,Constants.URL_UPDATE_VERSION);
+							
 				}else{
 					initLoginViews();
 				}

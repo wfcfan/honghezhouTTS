@@ -7,6 +7,7 @@ public final class Constants {
 	public static final boolean DEBUGGABLE = true;
 	public static final String APP_NAME = "智慧农业";
 	public static int CLIENT_VERSION_CODE;
+	public static final int STR_MAX_LENGTH =4;
 
 	public static String URL_HOST;
 	public static final String DEFAULT_HOST = "http://sy.17ghh.cn/tts";

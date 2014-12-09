@@ -21,8 +21,6 @@ import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
-import android.widget.CompoundButton;
-import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -30,14 +28,16 @@ import android.widget.TextView;
 import com.acctrue.tts.Constants;
 import com.acctrue.tts.GlobalApplication;
 import com.acctrue.tts.R;
+import com.acctrue.tts.db.UserInfoDB;
 import com.acctrue.tts.dto.LoginModel;
 import com.acctrue.tts.dto.LoginResponse;
+import com.acctrue.tts.dto.LoginResponse.UserInfo;
 import com.acctrue.tts.rpc.OnCompleteListener;
 import com.acctrue.tts.rpc.RpcAsyncTask;
 import com.acctrue.tts.tasks.TaskUtils;
 import com.acctrue.tts.utils.AccountUtil;
 import com.acctrue.tts.utils.NetworkUtil;
-import com.acctrue.tts.utils.SIMCardInfo;
+import com.acctrue.tts.utils.NetworkUtil.NetworkState;
 import com.acctrue.tts.utils.SharedPreferencesUtils;
 import com.acctrue.tts.utils.Toaster;
 
@@ -50,7 +50,7 @@ import com.acctrue.tts.utils.Toaster;
 public class LoginActivity extends ActivityGroup implements OnClickListener {
 	private final String TAG = LoginActivity.class.getSimpleName();
 	EditText pwdView;
-
+	Switch sw;
 	@Override
 	public void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -61,7 +61,12 @@ public class LoginActivity extends ActivityGroup implements OnClickListener {
 
 		Button btnSettings = (Button) this.findViewById(R.id.butn_settings);
 		btnSettings.setOnClickListener(this);
-
+		
+		sw = (Switch)this.findViewById(R.id.loginType);
+		if(NetworkUtil.getNetworkState(this) == NetworkState.NOTHING){
+			sw.setChecked(true);//无网络的时候，自动匹配离线模式
+		}
+		
 		pwdView = (EditText) this.findViewById(R.id.txtuserpwd);
 		pwdView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
 
@@ -83,14 +88,6 @@ public class LoginActivity extends ActivityGroup implements OnClickListener {
 				return false;
 			}
 
-		});
-		
-		((Switch)findViewById(R.id.loginType)).setOnCheckedChangeListener(new OnCheckedChangeListener() {
-			
-			@Override
-			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-				NetworkUtil.setOffLine(isChecked);				
-			}
 		});
 		
 		TextView txtVer = (TextView)findViewById(R.id.txtVer);
@@ -122,20 +119,6 @@ public class LoginActivity extends ActivityGroup implements OnClickListener {
 	}
 
 	final void login() {
-		//如果是离线，则读取以手机号为文件的用户信息，如果读到，则表示存在，否则，为未注册用户
-		if(NetworkUtil.isOffLine()){
-			if(!AccountUtil.isRegister()){
-				Toaster.show(R.string.unregister_phoneno_login);
-				return;
-			}else{
-				AccountUtil.loadAccount();
-				Intent intent = new Intent(LoginActivity.this,
-						HomeActivity.class);
-				startActivity(intent);
-				finish();
-				return;
-			}
-		}
 		EditText userNameView = (EditText) this.findViewById(R.id.username);
 		String userNameValue = userNameView.getText().toString();
 		if (userNameValue.equals("")) {
@@ -148,13 +131,39 @@ public class LoginActivity extends ActivityGroup implements OnClickListener {
 			Toaster.show(R.string.msg_loginPwd_emtpy);
 			return;
 		}
-
-		LoginModel lm = new LoginModel();
+		
+		final UserInfoDB udb = new UserInfoDB(this);
+		if(sw.isChecked()){//离线模式
+			UserInfo ui = udb.getUserInfo(userNameValue);
+			if(ui == null){
+				Toaster.show("该用户不存在,请先在联网状态下登录一次!");
+				return;
+			}
+			
+			if(!ui.getPassword().equals(userPwdValue)){
+				Toaster.show("用户密码输入有误!");
+				pwdView.setText("");
+				return;
+			}
+			
+			LoginResponse localReq = LoginResponse.fromLocal(ui);
+			AccountUtil.saveAccount(localReq);//保存用户信息
+			Toaster.show(R.string.login_succeed);
+			Intent intent = new Intent(LoginActivity.this,
+					HomeActivity.class);
+			startActivity(intent);
+			finish();
+			return;
+		}
+		
+		final LoginModel lm = new LoginModel();
 		lm.setUserName(userNameValue);
 		lm.setPassword(userPwdValue);
 		lm.setSerialNo(GlobalApplication.deviceId);
 		lm.setVersion(GlobalApplication.currentVersion);
 		Log.d(TAG, lm.toString());
+		
+		
 		
 		RpcAsyncTask task = new RpcAsyncTask(this,lm,new OnCompleteListener() {
 			@Override
@@ -175,6 +184,12 @@ public class LoginActivity extends ActivityGroup implements OnClickListener {
 					}
 					
 					AccountUtil.saveAccount(req);//保存用户信息
+					
+					//将用户信息存在本地数据库中，用于离线的验证
+					
+					UserInfo ui = req.getUserInfo();
+					ui.setPassword(lm.getPassword());
+					udb.addUserInfo(ui);
 					
 					Toaster.show(R.string.login_succeed);
 					Intent intent = new Intent(LoginActivity.this,

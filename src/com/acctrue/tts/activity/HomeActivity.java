@@ -24,6 +24,7 @@ import com.acctrue.tts.dto.LoginResponse;
 import com.acctrue.tts.utils.AccountUtil;
 import com.acctrue.tts.utils.NetworkUtil;
 import com.acctrue.tts.utils.Toaster;
+import com.acctrue.tts.utils.Util;
 
 /**
  * 主页
@@ -54,7 +55,11 @@ public class HomeActivity extends Activity implements OnClickListener {
 				Intent intent = null;
 				switch(position){
 					case Constants.DATA_DOWNLOAD: // ---------数据下载
-						intent = new Intent(HomeActivity.this,DataDownloadActivity.class);
+						if(!AccountUtil.isOnline()){
+							Toaster.show(R.string.offline_not_action);
+						}else{
+							intent = new Intent(HomeActivity.this,DataDownloadActivity.class);
+						}
 						break;
 					case Constants.PRODUCT_RECEIVE: // ---------农产品收取
 						intent = new Intent(HomeActivity.this,ChargeActivity.class); 
@@ -75,15 +80,15 @@ public class HomeActivity extends Activity implements OnClickListener {
 						intent = new Intent(HomeActivity.this,TrackNoMgntActivity.class); 
 						break;
 					case Constants.E_BUSINESS_OUT: // ---------电商出库 
-						if(NetworkUtil.isOffLine()){
-							Toaster.show(R.string.offline_not_action);
+						if(!AccountUtil.isOnline()){
+							Toaster.show(R.string.offline_not_action_ck);
 						}else{
 							intent = new Intent(HomeActivity.this,EBusinessOutStoreActivity.class);
 						}
 						break;
 					case Constants.DIRECT_OUT_STORE: // ---------直接出库 
-						if(NetworkUtil.isOffLine()){
-							Toaster.show(R.string.offline_not_action);
+						if(!AccountUtil.isOnline()){
+							Toaster.show(R.string.offline_not_action_ck);
 						}else{
 							intent = new Intent(HomeActivity.this,DirectOutStoreActivity.class);
 						}
@@ -111,14 +116,18 @@ public class HomeActivity extends Activity implements OnClickListener {
 		String userName = "";
 		if(u != null)
 			userName = u.getUserInfo().getUserDisplayName();
-
+		userName = Util.subStr(userName, Constants.STR_MAX_LENGTH);
 		lblUser.setText(userName);
 		lblUser.setOnClickListener(this);
 		TextView lblTitle = (TextView) this.findViewById(R.id.lblTitle);
 		lblTitle.setText("主界面");
 
 		TextView lblStatus = (TextView) this.findViewById(R.id.lblStatus);
-		lblStatus.setText(NetworkUtil.getNetworkStateString(HomeActivity.this));
+		String strStatus = NetworkUtil.getNetworkStateString(HomeActivity.this);
+		if(!u.isOnline()){
+			strStatus = "离线";
+		}
+		lblStatus.setText(strStatus);
 	}
 	
 	@Override
