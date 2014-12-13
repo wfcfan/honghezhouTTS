@@ -147,7 +147,7 @@
     
     <string name="login_type_off_hip">离线方式：</string>
     <string name="offline_not_action">当前处于离线状态，无法进行此操作</string>
-    <string name="offline_not_action_ck">因为该功能对于码的校验比较多，可能导致后台业务出现严重问题，请在在线模式下进行操作!</string>
+    <string name="offline_not_action_ck">离线模式下不支持此操作：出库操作需要在线对产品追溯码进行有效性校验，请切换为在线模式后再继续操作!</string>
     <string name="unregister_phoneno_login">该手机号未注册，请注册后再使用</string>
     
     <string name="pw_sm_hip1">收取码扫描</string>
