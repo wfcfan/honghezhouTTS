@@ -23,6 +23,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.acctrue.tts.Constants;
@@ -38,7 +39,6 @@ import com.acctrue.tts.rpc.OnCompleteListener;
 import com.acctrue.tts.rpc.RpcAsyncTask;
 import com.acctrue.tts.tasks.TaskUtils;
 import com.acctrue.tts.utils.AccountUtil;
-import com.acctrue.tts.utils.NetworkUtil;
 import com.acctrue.tts.utils.Toaster;
 import com.acctrue.tts.utils.ViewUtil;
 
@@ -108,6 +108,10 @@ public class FormMgrActivity extends Activity implements OnClickListener {
 		this.setViewValue(detailView,R.id.textView7, store.getDescription());
 		String ivs = StoreItem.toArrayString(store.getItem());
 		this.setViewValue(detailView,R.id.textView8, ivs);
+		//状态有争议，隐藏了它
+		TableRow stateRow = (TableRow)detailView.findViewById(R.id.stateRow1);
+		stateRow.setVisibility(View.GONE);
+		
 		Dialog detailDialog = new AlertDialog.Builder(this)
 		.setTitle("详情")
 		.setView(detailView)

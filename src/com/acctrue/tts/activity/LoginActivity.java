@@ -14,6 +14,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.util.Pair;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -92,7 +93,20 @@ public class LoginActivity extends ActivityGroup implements OnClickListener {
 		
 		TextView txtVer = (TextView)findViewById(R.id.txtVer);
 		String info  = "30天试用版      " + GlobalApplication.currentVersion;
+		info = "";//根据新的需求,不需要再显示此信息了 
 		txtVer.setText(info);
+		
+		loadLestLoginUser();
+	}
+	
+	/**
+	 * 加载最后一次成功登录的用户密码
+	 */
+	void loadLestLoginUser(){
+		Pair<String,String> pair = SharedPreferencesUtils.getLastUser();
+		EditText userNameView = (EditText) this.findViewById(R.id.username);
+		userNameView.setText(pair.first);
+		pwdView.setText(pair.second);
 	}
 
 	boolean canClose = false;
@@ -186,11 +200,12 @@ public class LoginActivity extends ActivityGroup implements OnClickListener {
 					AccountUtil.saveAccount(req);//保存用户信息
 					
 					//将用户信息存在本地数据库中，用于离线的验证
-					
 					UserInfo ui = req.getUserInfo();
 					ui.setPassword(lm.getPassword());
 					udb.addUserInfo(ui);
-					
+					//保存记录成功登录的用户名密码
+					SharedPreferencesUtils.setLastUser(lm.getUserName(), lm.getPassword());
+					//成功后提示成功信息，跳转到主界面
 					Toaster.show(R.string.login_succeed);
 					Intent intent = new Intent(LoginActivity.this,
 							HomeActivity.class);
