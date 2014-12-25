@@ -17,7 +17,7 @@ public class SharedPreferencesUtils {
 	private static final String KEY_MAX_SERIAL ="KEY_MAX_SERIAL";
 	
 	private static final String KEY_LAST_USERNAME = "KEY_LAST_USERNAME";
-	private static final String KEY_LAST_PASSWORD = "KEY_LAST_USERNAME";
+	private static final String KEY_LAST_PASSWORD = "KEY_LAST_PASSWORD";
 	
 	public static void setLastUser(String userName,String password){
 		Context context = GlobalApplication.mApp;
