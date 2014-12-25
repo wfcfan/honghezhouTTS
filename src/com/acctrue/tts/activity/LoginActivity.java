@@ -13,6 +13,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.TextUtils;
 import android.util.Log;
 import android.util.Pair;
 import android.view.KeyEvent;
@@ -206,7 +207,11 @@ public class LoginActivity extends ActivityGroup implements OnClickListener {
 					//保存记录成功登录的用户名密码
 					SharedPreferencesUtils.setLastUser(lm.getUserName(), lm.getPassword());
 					//成功后提示成功信息，跳转到主界面
-					Toaster.show(R.string.login_succeed);
+					//Toaster.show(R.string.login_succeed);
+					
+					if(!TextUtils.isEmpty(req.getMessage()))
+						Toaster.show(req.getMessage());
+					
 					Intent intent = new Intent(LoginActivity.this,
 							HomeActivity.class);
 					startActivity(intent);
