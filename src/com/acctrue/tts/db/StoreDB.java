@@ -87,7 +87,7 @@ public class StoreDB {
 	public void addStoreCode(StoreCode sc){
 		db = this._ctx.openOrCreateDatabase(Constants.DATABASE_NAME,
 				Constants.DATABASE_DEFAULT_VERSION, null); 
-		db.delete(TABLE_STORECODE, String.format("StoreId='%s' and ProductCode='%s'",sc.getStoreId(),sc.getProductCode()), null);//先执行删除，然后再增加
+		db.delete(TABLE_STORECODE, String.format("StoreId='%s' and CodeId='%s'",sc.getStoreId(),sc.getCodeId()), null);//先执行删除，然后再增加
 		ContentValues values = new ContentValues();
 		values.put("Id", sc.getId());
 		values.put("StoreId", sc.getStoreId());
